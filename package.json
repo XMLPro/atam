@@ -1,0 +1,23 @@
+{
+  "name": "atam",
+  "version": "0.0.0",
+  "description": "atcoder on terminal",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/XMLPro/atam.git"
+  },
+  "keywords": [
+    "atcoder",
+    "terminal"
+  ],
+  "author": "team Z",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/XMLPro/atam/issues"
+  },
+  "homepage": "https://github.com/XMLPro/atam#readme"
+}
