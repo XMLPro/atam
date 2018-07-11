@@ -19,5 +19,8 @@
   "bugs": {
     "url": "https://github.com/XMLPro/atam/issues"
   },
-  "homepage": "https://github.com/XMLPro/atam#readme"
+  "homepage": "https://github.com/XMLPro/atam#readme",
+  "dependencies": {
+    "puppeteer": "^1.5.0"
+  }
 }
