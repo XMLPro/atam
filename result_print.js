@@ -10,28 +10,27 @@ const puppeteer = require('puppeteer');
     ]
   });
 
-  // make page instance
-  // return promise
+  // ページのインスタンスを作る。
   const page = await browser.newPage();
 
-  // get url from command line arg
+  // コマンドライン引数からページのURLを取得。
+  // 提出するコードが完成したら、変更する必要あり。
   const url = process.argv[2];
-  // print
-  // console.log(url);
 
+  // URLのページに移動する。
   await page.goto(url);
 
+  // スクレイピングによりデータを取得する。
   const scrapingData = await page.evaluate(() => {
-    const dataList = [];
-    const nodeList = document.querySelectorAll("table");
-    nodeList.forEach(_node => {
-      // let elem = _node.innerText.split("\t").join(" ");
-      // elem = elem.split("\t").join(" ");
+    let dataList = [];
+    const tableList = document.querySelectorAll("table");
+    tableList.forEach(_node => {
       dataList.push(_node.innerText);
     })
+    dataList = dataList[2];
     return dataList;
   });
 
-  console.log(scrapingData[2]);
+  console.log(scrapingData);
   browser.close();
 })();
