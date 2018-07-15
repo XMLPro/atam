@@ -1,7 +1,7 @@
 // require
 const puppeteer = require('puppeteer');
 
-(async() => {
+const getAnswerStat = async() => {
   // option
   const browser = await puppeteer.launch({
     args: [
@@ -11,12 +11,11 @@ const puppeteer = require('puppeteer');
   });
 
   // コマンドライン引数からページのURLを取得。
-  // 提出するコードが完成したら、変更する必要あり。
+  // 「提出する」コードが完成したら、変更する必要あり。
   const url = process.argv[2];
 
   // ページのインスタンスを作る。
   const page = await browser.newPage();
-
 
   // URLのページに移動する。
   await page.goto(url);
@@ -32,13 +31,16 @@ const puppeteer = require('puppeteer');
     dataList = dataList.split("\n");
     for(let i = 0; i < dataList.length; i++) dataList[i] = dataList[i].split("\t");
     return dataList;
-  });
+  })
+  browser.close();
+  return scrapingData;
+};
 
-  // console.log(scrapingData);
-  console.log("case\tstat\ttime");
+const printResult = async(scrapingData) => {
+  console.log("case\tstat\ttime\tmemory");
   for(let i = 1; i < scrapingData.length; i++)
   {
-    for(let j = 0; j < scrapingData[i].length-1; j++)
+    for(let j = 0; j < scrapingData[i].length; j++)
     {
       if(j == 0) {
         process.stdout.write(scrapingData[i][j].substr(0, 5));
@@ -51,7 +53,14 @@ const puppeteer = require('puppeteer');
         process.stdout.write("\t");
       }
     }
-    console.log("");
+    await console.log("");
   }
-  await browser.close();
-})();
+};
+
+
+const main = async() => {
+  printResult(await getAnswerStat());
+}
+
+main();
+
