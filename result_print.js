@@ -1,6 +1,7 @@
 // require
 const puppeteer = require('puppeteer');
 
+// 回答の結果を取得し、二次元配列にして保持。
 const getAnswerStat = async() => {
   // オプション
   const browser = await puppeteer.launch({
@@ -37,7 +38,7 @@ const getAnswerStat = async() => {
     // 各要素をタブで分割する。二次元配列になる。
     for(let i = 0; i < dataList.length; i++) dataList[i] = dataList[i].split("\t");
     return dataList;
-  })
+  });
   browser.close();
   // 要素わけされた配列を戻り値とする。
   return parseList;
@@ -72,7 +73,7 @@ const printResult = async(scrapingData) => {
 // getAnswerStatのあとにprintResultを実行。
 const main = async() => {
   printResult(await getAnswerStat());
-}
+};
 
 main();
 
