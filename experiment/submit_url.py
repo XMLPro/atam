@@ -34,7 +34,6 @@ prob_hard = "a"
 lang = "3023"
 
 source_code = """
-print("ABC" if int(input()) < 1000 else "ABD")
 """
 
 submit(prob, prob_number, prob_hard, lang, source_code)
