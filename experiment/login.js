@@ -1,6 +1,13 @@
 const puppeteer = require('puppeteer');
+const fs = require('fs');
 
-const login = async() => {
+const cookie_path = './cookie_login.json';
+const login_url = "https://beta.atcoder.jp/login";
+
+const first_login = async() => {
+  const username = "";
+  const password = "";
+
   const browser = await puppeteer.launch({
     args: [
     '--no-sandbox',
@@ -8,10 +15,6 @@ const login = async() => {
     ]
   });
 
-
-  const login_url = "https://beta.atcoder.jp/login";
-  username = "";
-  password = "";
 
   const page = await browser.newPage();
   await page.goto(login_url);
@@ -30,8 +33,34 @@ const login = async() => {
   // ログイン確認用スクリーンショット
   await page.screenshot({path: "check_login.png"});
 
+  const cookies = await page.cookies();
+  fs.writeFileSync(cookie_path, JSON.stringify(cookies));
+
   await browser.close();
 };
 
-login();
+const login_by_cookie = async() => {
+
+  const browser = await puppeteer.launch({
+    args: [
+    '--no-sandbox',
+    '--disable-setuid-sandbox'
+    ]
+  });
+  const page = await browser.newPage();
+  
+  console.log("A");
+
+  const cookies = JSON.parse(fs.readFileSync(cookie_path, 'utf-8'));
+  console.log(cookies);
+  for(let cookie of cookies) await page.setCookie(cookie);
+
+  await page.goto('https://beta.atcoder.jp/');
+
+  await page.screenshot({path: "login_by_cookie.png"});
+
+  await browser.close();
+}
+
+login_by_cookie();
 
