@@ -3,19 +3,20 @@ const fs = require('fs');
 
 const cookie_path = './cookie_login.json';
 const login_url = "https://beta.atcoder.jp/login";
+const atcoder_url = 'https://beta.atcoder.jp/';
 
 const first_login = async() => {
+  // 各自入力してください
   const username = "";
   const password = "";
-
+  
+  // インスタンス作成
   const browser = await puppeteer.launch({
     args: [
     '--no-sandbox',
     '--disable-setuid-sandbox'
     ]
   });
-
-
   const page = await browser.newPage();
   await page.goto(login_url);
   
@@ -23,24 +24,28 @@ const first_login = async() => {
   await page.type('input[name="username"]', username);
   // password欄にpassword書いて
   await page.type('input[name="password"]', password);
-  // 60000msでタイムアウトし、ページが遷移するまで待機する
+  // 60000msでタイムアウトし、ページが遷移するまで待機する設定
   const navigationPromise = page.waitForNavigation({
     timeout: 60000, waitUntil: "domcontentloaded"
   });
   // ログインをクリック
   await page.click('#submit');
+  // 待つ
   await navigationPromise;
+
   // ログイン確認用スクリーンショット
   await page.screenshot({path: "check_login.png"});
 
+  // cookie取得
   const cookies = await page.cookies();
+  // ファイルに保持
   fs.writeFileSync(cookie_path, JSON.stringify(cookies));
 
   await browser.close();
 };
 
 const login_by_cookie = async() => {
-
+  // インスタンス作成
   const browser = await puppeteer.launch({
     args: [
     '--no-sandbox',
@@ -49,18 +54,22 @@ const login_by_cookie = async() => {
   });
   const page = await browser.newPage();
   
-  console.log("A");
-
+  // cookiesの読み込み
   const cookies = JSON.parse(fs.readFileSync(cookie_path, 'utf-8'));
-  console.log(cookies);
   for(let cookie of cookies) await page.setCookie(cookie);
 
-  await page.goto('https://beta.atcoder.jp/');
+  const navigationPromise = page.waitForNavigation({
+    timeout: 60000, waitUntil: "domcontentloaded"
+  });
+  await page.goto(atcoder_url);
 
+  await navigationPromise;
+  // 確認用スクリーンショット
   await page.screenshot({path: "login_by_cookie.png"});
 
   await browser.close();
 }
 
+first_login();
 login_by_cookie();
 
