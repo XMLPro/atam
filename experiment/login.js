@@ -1,5 +1,6 @@
 const puppeteer = require('puppeteer');
 const fs = require('fs');
+// const readlinesync = require('readline-sync');
 
 const cookie_path = './cookie_login.json';
 const login_url = "https://beta.atcoder.jp/login";
@@ -70,6 +71,8 @@ const login_by_cookie = async() => {
   await browser.close();
 }
 
-first_login();
-login_by_cookie();
 
+(async() => {
+  await first_login();
+  await login_by_cookie();
+})();
