@@ -1,15 +1,14 @@
 const puppeteer = require('puppeteer');
 const fs = require('fs');
-const readlinesync = require('readline-sync');
+const rls = require('readline-sync');
 
 const cookie_path = './cookie_login.json';
 const login_url = "https://beta.atcoder.jp/login";
 const atcoder_url = 'https://beta.atcoder.jp/';
 
 const first_login = async() => {
-  // 各自入力してください
-  const username = "";
-  const password = "";
+  let username = rls.question('username: ');
+  let password = rls.question('password: ', {hideEchoBack: true});
   
   // インスタンス作成
   const browser = await puppeteer.launch({
