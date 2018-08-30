@@ -21,6 +21,8 @@
   },
   "homepage": "https://github.com/XMLPro/atam#readme",
   "dependencies": {
-    "puppeteer": "^1.7.0"
-  }
+    "puppeteer": "^1.7.0",
+    "readline-sync": "^1.4.9"
+  },
+  "devDependencies": {}
 }
