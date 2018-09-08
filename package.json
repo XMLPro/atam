@@ -20,6 +20,9 @@
     "url": "https://github.com/XMLPro/atam/issues"
   },
   "homepage": "https://github.com/XMLPro/atam#readme",
+  "bin": {
+    "atam": "src/atam.js"
+  },
   "dependencies": {
     "puppeteer": "^1.7.0",
     "readline-sync": "^1.4.9"
