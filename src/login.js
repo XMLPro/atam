@@ -1,3 +1,6 @@
+#!/usr/bin/env node
+'use strict';
+
 const puppeteer = require('puppeteer');
 const fs = require('fs');
 const rls = require('readline-sync');
@@ -71,6 +74,5 @@ const loginByCookie = async() => {
   await browser.close();
 }
 
-module.exports = loginByNameAndPW;
-module.exports = loginByCookie;
-
+exports.loginByNameAndPW = loginByNameAndPW;
+exports.loginByCookie = loginByCookie;
