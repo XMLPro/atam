@@ -1,6 +1,3 @@
 *node_modules/
-/experiment/*.png
-/experiment/*.json
-/src/login/*.png
-/src/login/*.json
-
+*.png
+*cookie_login.json
