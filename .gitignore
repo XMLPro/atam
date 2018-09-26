@@ -1,3 +1,6 @@
 *node_modules/
 /experiment/*.png
 /experiment/*.json
+/src/login/*.png
+/src/login/*.json
+
