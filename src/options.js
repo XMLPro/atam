@@ -4,6 +4,7 @@ var program = require('commander');
 
 program
   .version('0.0.1')
+  .option('-l,  --login', 'Login AtCoder')
   .option('-p, --peppers', 'Add peppers')
   .option('-P, --pineapple', 'Add pineapple')
   .option('-b, --bbq-sauce', 'Add bbq sauce')
