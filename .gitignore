@@ -1,3 +1,6 @@
 *node_modules/
 /experiment/*.png
 /experiment/*.json
+*.png
+yarn-error.log
+cookie_login.json
