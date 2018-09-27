@@ -2,14 +2,11 @@
 const fs = require('fs');
 const os = require('os');
 
-function mkdotfile()
-{
-  try
-  {
+function mkdotfile() {
+  try {
     let dir = fs.readdirSync(`${os.homedir()}/.atam`);
   }
-  catch(e)
-  {
+  catch(e) {
     fs.mkdirSync(`${os.homedir()}/.atam`);
   }
 }
