@@ -3,7 +3,7 @@ const queryString = require('query-string')
 const fs = require('fs');
 
 const base_url = 'https://beta.atcoder.jp/contests/'
-const cookie_path = '../cookie_login.json';
+const cookie_path = './cookie_login.json';
 const submit = async(prob, prob_number, prob_hard, lang, source_code) => {
   const submit_url = `${base_url}${prob}${prob_number}/submit`
   const browser = await puppeteer.launch({
@@ -18,33 +18,18 @@ const submit = async(prob, prob_number, prob_hard, lang, source_code) => {
   });
   await page.goto(submit_url);
   await navigationPromise;
-  item = await page.$('input[name=csrf_token]');
-  const csrf_token = await (await item.getProperty('value')).jsonValue();
-  console.log(csrf_token)
 
-  const data = {
-    'data.TaskScreenName': `${prob}${prob_number}_${prob_hard}`,
-    'data.LanguageId': lang,
-    'sourceCode': source_code,
-    'csrf_token': csrf_token,
-  }
+  const task = `${prob}${prob_number}_${prob_hard}`;
+  await page.select('select[name="data.TaskScreenName"]', task);
+  await page.select('select[name="data.LanguageId"]', lang);
+  await page.click('button.btn-toggle-editor');
+  await page.type('textarea[name="sourceCode"]', source_code);
+  page.click('#submit');
+  await page.waitForNavigation({timeout: 60000, waitUntil: "domcontentloaded"});
 
-  await page.setRequestInterception(true);
-  page.on('request', request => {
-    const overrides = {};
-    overrides.method = 'POST';
-    overrides.postData = queryString.stringify(data);
-    request.continue(overrides);
-  });
-  await page.goto(submit_url);
-  // 確認用スクリーンショット
-  await page.screenshot({path: 'sb.png'});
+  await page.screenshot({path: 'submit_result.png'}); // debug!!!!!!!!
   
   await browser.close();
 }
 
-(async() => {
-  await submit('abc', '110', 'a', '3023', 'a = list(map(int, input().split())); print(max(a) * 9 + sum(a))');
-})();
-
-// module.exports = chalk_convert
+exports.submit = submit;
