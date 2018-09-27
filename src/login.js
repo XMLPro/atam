@@ -1,3 +1,6 @@
+#!/usr/bin/env node
+'use strict';
+
 const puppeteer = require('puppeteer');
 const fs = require('fs');
 const rls = require('readline-sync');
@@ -6,10 +9,11 @@ const cookie_path = './cookie_login.json';
 const login_url = "https://beta.atcoder.jp/login";
 const atcoder_url = 'https://beta.atcoder.jp/';
 
-const first_login = async() => {
+
+const loginByNameAndPW = async() => {
   let username = rls.question('username: ');
   let password = rls.question('password: ', {hideEchoBack: true});
-  
+
   // インスタンス作成
   const browser = await puppeteer.launch({
     args: [
@@ -19,7 +23,7 @@ const first_login = async() => {
   });
   const page = await browser.newPage();
   await page.goto(login_url);
-  
+
   // usename欄にusername書いて
   await page.type('input[name="username"]', username);
   // password欄にpassword書いて
@@ -44,7 +48,7 @@ const first_login = async() => {
   await browser.close();
 };
 
-const login_by_cookie = async() => {
+const loginByCookie = async() => {
   // インスタンス作成
   const browser = await puppeteer.launch({
     args: [
@@ -53,7 +57,7 @@ const login_by_cookie = async() => {
     ]
   });
   const page = await browser.newPage();
-  
+
   // cookiesの読み込み
   const cookies = JSON.parse(fs.readFileSync(cookie_path, 'utf-8'));
   for(let cookie of cookies) await page.setCookie(cookie);
@@ -65,13 +69,10 @@ const login_by_cookie = async() => {
 
   await navigationPromise;
   // 確認用スクリーンショット
-  await page.screenshot({path: "login_by_cookie.png"});
+  await page.screenshot({path: "loginByCookie.png"});
 
   await browser.close();
 }
 
-
-(async() => {
-  await first_login();
-  await login_by_cookie();
-})();
+exports.loginByNameAndPW = loginByNameAndPW;
+exports.loginByCookie = loginByCookie;
