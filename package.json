@@ -25,6 +25,7 @@
   },
   "dependencies": {
     "puppeteer": "^1.7.0",
+    "query-string": "^6.1.0",
     "readline-sync": "^1.4.9"
   },
   "devDependencies": {
