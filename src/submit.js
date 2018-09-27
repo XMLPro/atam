@@ -18,6 +18,7 @@ const submit = async(prob, prob_number, prob_hard, lang, source_code) => {
   });
   await page.goto(submit_url);
   await navigationPromise;
+  await page.screenshot({path: 'submit_result1.png'}); // debug!!!!!!!!
 
   const task = `${prob}${prob_number}_${prob_hard}`;
   await page.select('select[name="data.TaskScreenName"]', task);
@@ -27,7 +28,7 @@ const submit = async(prob, prob_number, prob_hard, lang, source_code) => {
   page.click('#submit');
   await page.waitForNavigation({timeout: 60000, waitUntil: "domcontentloaded"});
 
-  await page.screenshot({path: 'submit_result.png'}); // debug!!!!!!!!
+  await page.screenshot({path: 'submit_result2.png'}); // debug!!!!!!!!
   
   await browser.close();
 }
