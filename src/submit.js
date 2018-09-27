@@ -26,8 +26,6 @@ const submit = async(prob, prob_number, prob_hard, lang, source_code) => {
   await page.type('textarea[name="sourceCode"]', source_code);
   page.click('#submit');
   await page.waitForNavigation({timeout: 60000, waitUntil: "domcontentloaded"});
-
-  await page.screenshot({path: 'submit_result.png'}); // debug!!!!!!!!
   
   await browser.close();
 }
