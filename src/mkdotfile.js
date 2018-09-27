@@ -1,18 +1,17 @@
 #!/usr/bin/env node
-const fs = require('fs')
-const os = require('os')
+const fs = require('fs');
+const os = require('os');
 
 function mkdotfile()
 {
   try
   {
-    let dir = fs.readdirSync(`${os.homedir()}/.atam`)
+    let dir = fs.readdirSync(`${os.homedir()}/.atam`);
   }
   catch(e)
   {
-    fs.mkdirSync(`${os.homedir()}/.atam`)
+    fs.mkdirSync(`${os.homedir()}/.atam`);
   }
 }
 
-module.exports = mkdotfile
-
+module.exports = mkdotfile;
