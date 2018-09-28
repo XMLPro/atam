@@ -36,9 +36,6 @@ const loginByNameAndPW = async() => {
   // 待つ
   await navigationPromise;
 
-  // ログイン確認用スクリーンショット
-  await page.screenshot({path: "check_login.png"});
-
   // cookie取得
   const cookies = await page.cookies();
   // ファイルに保持
@@ -67,9 +64,6 @@ const loginByCookie = async(url) => {
   await page.goto(url);
 
   await navigationPromise;
-  // 確認用スクリーンショット
-  await page.screenshot({path: "loginByCookie.png"});
-  // await browser.close();
   return [page, browser];
 }
 

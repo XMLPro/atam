@@ -12,8 +12,6 @@ const submit = async(prob, prob_number, prob_hard, lang, source_code) => {
   page = data[0];
   browser = data[1];
 
-  await page.screenshot({path: 'submit_result1.png'}); // debug!!!!!!!!
-
   const task = `${prob}${prob_number}_${prob_hard}`;
   await page.select('select[name="data.TaskScreenName"]', task);
   await page.select('select[name="data.LanguageId"]', lang);
@@ -21,8 +19,6 @@ const submit = async(prob, prob_number, prob_hard, lang, source_code) => {
   await page.type('textarea[name="sourceCode"]', source_code);
   page.click('#submit');
   await page.waitForNavigation({timeout: 60000, waitUntil: "domcontentloaded"});
-
-  await page.screenshot({path: 'submit_result2.png'}); // debug!!!!!!!!
 
   await browser.close();
 }
