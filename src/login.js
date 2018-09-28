@@ -69,8 +69,8 @@ const loginByCookie = async(url) => {
   await navigationPromise;
   // 確認用スクリーンショット
   await page.screenshot({path: "loginByCookie.png"});
-
-  await browser.close();
+  // await browser.close();
+  return [page, browser];
 }
 
 exports.loginByNameAndPW = loginByNameAndPW;
