@@ -7,7 +7,6 @@ const rls = require('readline-sync');
 
 const cookie_path = './cookie_login.json';
 const login_url = "https://beta.atcoder.jp/login";
-const atcoder_url = 'https://beta.atcoder.jp/';
 
 
 const loginByNameAndPW = async() => {
@@ -48,7 +47,7 @@ const loginByNameAndPW = async() => {
   await browser.close();
 };
 
-const loginByCookie = async() => {
+const loginByCookie = async(url) => {
   // インスタンス作成
   const browser = await puppeteer.launch({
     args: [
@@ -65,13 +64,13 @@ const loginByCookie = async() => {
   const navigationPromise = page.waitForNavigation({
     timeout: 60000, waitUntil: "domcontentloaded"
   });
-  await page.goto(atcoder_url);
+  await page.goto(url);
 
   await navigationPromise;
   // 確認用スクリーンショット
   await page.screenshot({path: "loginByCookie.png"});
-
-  await browser.close();
+  // await browser.close();
+  return [page, browser];
 }
 
 exports.loginByNameAndPW = loginByNameAndPW;
