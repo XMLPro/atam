@@ -28,6 +28,7 @@
     "inquirer": "^6.2.0",
     "inquirer-autocomplete-prompt": "^1.0.1",
     "puppeteer": "^1.7.0",
+    "query-string": "^6.1.0",
     "readline-sync": "^1.4.9"
   },
   "devDependencies": {
