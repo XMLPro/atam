@@ -7,7 +7,6 @@ const rls = require('readline-sync');
 
 const cookie_path = './cookie_login.json';
 const login_url = "https://beta.atcoder.jp/login";
-const atcoder_url = 'https://beta.atcoder.jp/';
 
 
 const loginByNameAndPW = async() => {
@@ -62,16 +61,7 @@ const loginByCookie = async() => {
   const cookies = JSON.parse(fs.readFileSync(cookie_path, 'utf-8'));
   for(let cookie of cookies) await page.setCookie(cookie);
 
-  const navigationPromise = page.waitForNavigation({
-    timeout: 60000, waitUntil: "domcontentloaded"
-  });
-  await page.goto(atcoder_url);
-
-  await navigationPromise;
-  // 確認用スクリーンショット
-  await page.screenshot({path: "loginByCookie.png"});
-
-  await browser.close();
+  return [page, browser];
 }
 
 exports.loginByNameAndPW = loginByNameAndPW;
