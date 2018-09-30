@@ -1,6 +1,7 @@
 const puppeteer = require('puppeteer');
 const inquirer = require('inquirer');
 const Fuse = require('fuse.js');
+const fs = require('fs');
 
 const base_url = "https://beta.atcoder.jp/contests/";
 var options = {
@@ -45,4 +46,11 @@ async function get_lang_id(logined_page, prob, prob_number) {
   }).then(answer => langId[answer.lang]);
 }
 
+
+function get_source(source_name) {
+  let source = fs.readFileSync(source_name, 'utf-8');
+  return source;
+}
+
 exports.get_lang_id = get_lang_id;
+exports.get_source = get_source;
