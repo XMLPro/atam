@@ -8,9 +8,15 @@ const cookie_path = './cookie_login.json';
 const submit = async(prob, prob_number, prob_hard, lang, source_code) => {
   const submit_url = `${base_url}${prob}${prob_number}/submit`
 
-  data = await login.loginByCookie(submit_url)
+  data = await login.loginByCookie();
   page = data[0];
   browser = data[1];
+
+  const navigationPromise = page.waitForNavigation({
+    timeout: 60000, waitUntil: 'domcontentloaded'
+  });
+  await page.goto(submit_url);
+  await navigationPromise;
 
   await page.screenshot({path: 'submit_result1.png'}); // debug!!!!!!!!
 

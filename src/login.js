@@ -47,7 +47,7 @@ const loginByNameAndPW = async() => {
   await browser.close();
 };
 
-const loginByCookie = async(url) => {
+const loginByCookie = async() => {
   // インスタンス作成
   const browser = await puppeteer.launch({
     args: [
@@ -61,15 +61,6 @@ const loginByCookie = async(url) => {
   const cookies = JSON.parse(fs.readFileSync(cookie_path, 'utf-8'));
   for(let cookie of cookies) await page.setCookie(cookie);
 
-  const navigationPromise = page.waitForNavigation({
-    timeout: 60000, waitUntil: "domcontentloaded"
-  });
-  await page.goto(url);
-
-  await navigationPromise;
-  // 確認用スクリーンショット
-  await page.screenshot({path: "loginByCookie.png"});
-  // await browser.close();
   return [page, browser];
 }
 
