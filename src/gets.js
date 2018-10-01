@@ -63,7 +63,7 @@ async function get_problem_id(logined_page, prob, prob_number) {
 
   const Task = Object.keys(TaskScreenName).map(elm => ({name: elm}));
 
-  const fuse = new Fuse(language, options);
+  const fuse = new Fuse(Task, options);
 
   const prompt = inquirer.createPromptModule();
   prompt.registerPrompt('autocomplete', require('inquirer-autocomplete-prompt'));
