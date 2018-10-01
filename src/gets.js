@@ -47,10 +47,42 @@ async function get_lang_id(logined_page, prob, prob_number) {
 }
 
 
+async function get_problem_id(logined_page, prob, prob_number) {
+  const url = `${base_url}${prob}${prob_number}/submit`;
+
+  await logined_page.goto(url);
+
+  const items = await logined_page.$$('select[name="data.TaskScreenName"] option');
+  let TaskScreenName = {};
+  for (let item of items) {
+    const id = await (await item.getProperty('value')).jsonValue();
+    const name = await (await item.getProperty('textContent')).jsonValue();
+    TaskScreenName[name] = id;
+  }
+
+
+  const Task = Object.keys(TaskScreenName).map(elm => ({name: elm}));
+
+  const fuse = new Fuse(language, options);
+
+  const prompt = inquirer.createPromptModule();
+  prompt.registerPrompt('autocomplete', require('inquirer-autocomplete-prompt'));
+
+  return prompt({
+    type: "autocomplete",
+    name: "name",
+    message: "問題を選んでね！！！！ >> ",
+    source: async (answer, input) => (
+      input ? fuse.search(input) : Task
+    ).map(elm => elm.name),
+  }).then(answer => TaskScreenName[answer.name]);
+}
+
 function get_source(source_name) {
   let source = fs.readFileSync(source_name, 'utf-8');
   return source;
 }
 
 exports.get_lang_id = get_lang_id;
+exports.get_problem_id = get_problem_id;
 exports.get_source = get_source;
