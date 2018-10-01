@@ -13,6 +13,7 @@ var options = {
   minMatchCharLength: 1,
   keys: [
     "lang",
+    "problem",
   ]};
 
 async function get_lang_id(logined_page, prob, prob_number) {
@@ -56,12 +57,12 @@ async function get_problem_id(logined_page, prob, prob_number) {
   let TaskScreenName = {};
   for (let item of items) {
     const id = await (await item.getProperty('value')).jsonValue();
-    const name = await (await item.getProperty('textContent')).jsonValue();
-    TaskScreenName[name] = id;
+    const problem = await (await item.getProperty('textContent')).jsonValue();
+    TaskScreenName[problem] = id;
   }
 
 
-  const Task = Object.keys(TaskScreenName).map(elm => ({name: elm}));
+  const Task = Object.keys(TaskScreenName).map(elm => ({problem: elm}));
 
   const fuse = new Fuse(Task, options);
 
@@ -70,18 +71,19 @@ async function get_problem_id(logined_page, prob, prob_number) {
 
   return prompt({
     type: "autocomplete",
-    name: "name",
+    name: "problem",
     message: "問題を選んでね！！！！ >> ",
     source: async (answer, input) => (
       input ? fuse.search(input) : Task
-    ).map(elm => elm.name),
-  }).then(answer => TaskScreenName[answer.name]);
+    ).map(elm => elm.problem),
+  }).then(answer => TaskScreenName[answer.problem]);
 }
 
 function get_source(source_name) {
   let source = fs.readFileSync(source_name, 'utf-8');
   return source;
 }
+
 
 exports.get_lang_id = get_lang_id;
 exports.get_problem_id = get_problem_id;
