@@ -11,7 +11,6 @@ function mkdotfile() {
   catch(e) {
     fs.mkdirSync(dotfile_path);
   }
-  return dotfile_path;
 }
 
 exports.dotfile_path = dotfile_path;
