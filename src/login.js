@@ -5,12 +5,14 @@ const puppeteer = require('puppeteer');
 const fs = require('fs');
 const rls = require('readline-sync');
 
-const cookie_path = './cookie_login.json';
+const mkdotfile = require('./mkdotfile');
+
 const login_url = "https://beta.atcoder.jp/login";
+const cookie_path = `${mkdotfile.dotfile_path}/cookie_login.json`;
 const atcoder_url = 'https://beta.atcoder.jp/';
 
-
 const loginByNameAndPW = async() => {
+  mkdotfile.mkdotfile();
   let username = rls.question('username: ');
   let password = rls.question('password: ', {hideEchoBack: true});
 
