@@ -9,7 +9,6 @@ const mkdotfile = require('./mkdotfile');
 
 const login_url = "https://beta.atcoder.jp/login";
 const cookie_path = `${mkdotfile.dotfile_path}/cookie_login.json`;
-const atcoder_url = 'https://beta.atcoder.jp/';
 
 const loginByNameAndPW = async() => {
   mkdotfile.mkdotfile();
@@ -64,16 +63,7 @@ const loginByCookie = async() => {
   const cookies = JSON.parse(fs.readFileSync(cookie_path, 'utf-8'));
   for(let cookie of cookies) await page.setCookie(cookie);
 
-  const navigationPromise = page.waitForNavigation({
-    timeout: 60000, waitUntil: "domcontentloaded"
-  });
-  await page.goto(atcoder_url);
-
-  await navigationPromise;
-  // 確認用スクリーンショット
-  await page.screenshot({path: "loginByCookie.png"});
-
-  await browser.close();
+  return [page, browser];
 }
 
 exports.loginByNameAndPW = loginByNameAndPW;
