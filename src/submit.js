@@ -5,12 +5,9 @@ const login = require('./login')
 
 const base_url = 'https://beta.atcoder.jp/contests/'
 const cookie_path = './cookie_login.json';
-const submit = async(prob, prob_number, prob_hard, lang, source_code) => {
+const submit = async(logined_page, prob, prob_number, prob_hard, lang, source_code) => {
   const submit_url = `${base_url}${prob}${prob_number}/submit`
-
-  data = await login.loginByCookie();
-  page = data[0];
-  browser = data[1];
+  const page = logined_page;
 
   const navigationPromise = page.waitForNavigation({
     timeout: 60000, waitUntil: 'domcontentloaded'
@@ -29,8 +26,6 @@ const submit = async(prob, prob_number, prob_hard, lang, source_code) => {
   await page.waitForNavigation({timeout: 60000, waitUntil: "domcontentloaded"});
 
   await page.screenshot({path: 'submit_result2.png'}); // debug!!!!!!!!
-
-  await browser.close();
 }
 
 exports.submit = submit;
