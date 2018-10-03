@@ -4,7 +4,7 @@ const Fuse = require('fuse.js');
 const fs = require('fs');
 
 const base_url = "https://beta.atcoder.jp/contests/";
-var options = {
+const lang_id_options = {
   shouldSort: true,
   threshold: 0.6,
   location: 0,
@@ -12,7 +12,17 @@ var options = {
   maxPatternLength: 32,
   minMatchCharLength: 1,
   keys: [
-    "lang",
+    "problem",
+  ]};
+
+const problem_id_options = {
+  shouldSort: true,
+  threshold: 0.6,
+  location: 0,
+  distance: 100,
+  maxPatternLength: 32,
+  minMatchCharLength: 1,
+  keys: [
     "problem",
   ]};
 
@@ -32,7 +42,7 @@ async function get_lang_id(logined_page, prob, prob_number) {
 
   const language = Object.keys(langId).map(elm => ({lang: elm}));
 
-  const fuse = new Fuse(language, options);
+  const fuse = new Fuse(language, lang_id_options);
 
   const prompt = inquirer.createPromptModule();
   prompt.registerPrompt('autocomplete', require('inquirer-autocomplete-prompt'));
@@ -64,7 +74,7 @@ async function get_problem_id(logined_page, prob, prob_number) {
 
   const Task = Object.keys(TaskScreenName).map(elm => ({problem: elm}));
 
-  const fuse = new Fuse(Task, options);
+  const fuse = new Fuse(Task, problem_id_options);
 
   const prompt = inquirer.createPromptModule();
   prompt.registerPrompt('autocomplete', require('inquirer-autocomplete-prompt'));
