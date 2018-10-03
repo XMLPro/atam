@@ -11,20 +11,25 @@ const login_url = "https://beta.atcoder.jp/login";
 const cookie_path = `${mkdotfile.dotfile_path}/cookie_login.json`;
 
 const loginByNameAndPW = async() => {
-  mkdotfile.mkdotfile();
-  let username = rls.question('username: ');
-  let password = rls.question('password: ', {hideEchoBack: true});
-
-  // インスタンス作成
   const browser = await puppeteer.launch({
     args: [
-    '--no-sandbox',
-    '--disable-setuid-sandbox'
+      '--no-sandbox',
+      '--disable-setuid-sandbox'
     ]
   });
   const page = await browser.newPage();
-  await page.goto(login_url);
 
+  try {
+    await page.goto(login_url);
+  } catch (e) {
+    console.log(e);
+    console.log('check network connection.');
+    browser.close();
+    return;
+  }
+
+  let username = rls.question('username: ');
+  let password = rls.question('password: ', {hideEchoBack: true});
   // usename欄にusername書いて
   await page.type('input[name="username"]', username);
   // password欄にpassword書いて
@@ -37,9 +42,6 @@ const loginByNameAndPW = async() => {
   await page.click('#submit');
   // 待つ
   await navigationPromise;
-
-  // ログイン確認用スクリーンショット
-  await page.screenshot({path: "check_login.png"});
 
   // cookie取得
   const cookies = await page.cookies();
@@ -68,3 +70,4 @@ const loginByCookie = async() => {
 
 exports.loginByNameAndPW = loginByNameAndPW;
 exports.loginByCookie = loginByCookie;
+
