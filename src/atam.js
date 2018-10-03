@@ -24,7 +24,8 @@ if (opt.login) {
 
     const source_code = gets.get_source(filename);
     let lang = await gets.get_lang_id(page, prob, number);
-    await submit(page, prob, number, '1', lang, source_code);
+    let hard = await gets.get_problem_id(page, prob, number);
+    await submit(page, prob, number, hard, lang, source_code);
     browser.close();
   } else {
     opt.outputHelp();
