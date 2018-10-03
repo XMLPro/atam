@@ -9,6 +9,4 @@ program
   .option('-l,  --login', 'Login AtCoder')
   .parse(process.argv);
 
-  if (program.login) login.loginByNameAndPW();
-
 module.exports = program

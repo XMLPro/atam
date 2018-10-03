@@ -11,6 +11,11 @@ const filename = command[0];
 const prob = command[1];
 const number = command[2];
 
+if (opt.login) {
+  login.loginByNameAndPW();
+  return;
+}
+
 (async() => {
   if(filename && prob && number) {
     const data = await login.loginByCookie();
