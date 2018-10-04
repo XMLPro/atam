@@ -11,6 +11,7 @@ const login_url = "https://beta.atcoder.jp/login";
 const cookie_path = `${mkdotfile.dotfile_path}/cookie_login.json`;
 
 const loginByNameAndPW = async() => {
+  mkdotfile.mkdotfile();
   const browser = await puppeteer.launch({
     args: [
       '--no-sandbox',
