@@ -1,10 +1,11 @@
 #!/usr/bin/env node
 
-var program = require('commander');
+const program = require('commander');
 const login = require('./login');
+const package = require('../package.json')
 
 program
-  .version('0.0.1')
+  .version(package.version)
   .usage('<filename> <prob(e.g.: abc)> <number(e.g.: 001)>')
   .option('-l,  --login', 'Login AtCoder')
   .parse(process.argv);
