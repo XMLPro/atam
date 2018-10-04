@@ -68,7 +68,6 @@ const loginByCookie = async() => {
   const cookies = JSON.parse(fs.readFileSync(cookie_path, 'utf-8'));
   for(let cookie of cookies) await page.setCookie(cookie);
 
-  browser.close();
   return [page, browser];
 }
 
