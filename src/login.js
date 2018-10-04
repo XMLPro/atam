@@ -42,10 +42,11 @@ const loginByNameAndPW = async() => {
   const url_after_logging = await page['_target']['_targetInfo']['title'];
 
   if(url_after_logging == login_url){
-    console.log('Error! Wrong username or password!');
+    console.log('Error! Wrong username or password.');
     await browser.close();
     return;
   }
+  else console.log('Complete login!!');
   // cookie取得
   const cookies = await page.cookies();
   fs.writeFileSync(cookie_path, JSON.stringify(cookies));
