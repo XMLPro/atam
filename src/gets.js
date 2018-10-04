@@ -12,7 +12,7 @@ const lang_id_options = {
   maxPatternLength: 32,
   minMatchCharLength: 1,
   keys: [
-    "problem",
+    "lang",
   ]};
 
 const problem_id_options = {
