@@ -12,45 +12,50 @@ const cookie_path = `${mkdotfile.dotfile_path}/cookie_login.json`;
 
 const loginByNameAndPW = async() => {
   mkdotfile.mkdotfile();
-  let username = rls.question('username: ');
-  let password = rls.question('password: ', {hideEchoBack: true});
-
-  // インスタンス作成
   const browser = await puppeteer.launch({
     args: [
-    '--no-sandbox',
-    '--disable-setuid-sandbox'
+      '--no-sandbox',
+      '--disable-setuid-sandbox'
     ]
   });
   const page = await browser.newPage();
-  await page.goto(login_url);
 
-  // usename欄にusername書いて
+  try {
+    await page.goto(login_url);
+  } catch (e) {
+    console.log(e);
+    console.log('check network connection.');
+    browser.close();
+    return;
+  }
+
+  let username = rls.question('username: ');
+  let password = rls.question('password: ', {hideEchoBack: true});
   await page.type('input[name="username"]', username);
-  // password欄にpassword書いて
   await page.type('input[name="password"]', password);
   // 60000msでタイムアウトし、ページが遷移するまで待機する設定
   const navigationPromise = page.waitForNavigation({
     timeout: 60000, waitUntil: "domcontentloaded"
   });
-  // ログインをクリック
   await page.click('#submit');
   // 待つ
   await navigationPromise;
+  const url_after_logging = await page['_target']['_targetInfo']['title'];
 
-  // ログイン確認用スクリーンショット
-  await page.screenshot({path: "check_login.png"});
-
+  if(url_after_logging == login_url){
+    console.log('Error! Wrong username or password.');
+    await browser.close();
+    return;
+  }
+  else console.log('Complete login!!');
   // cookie取得
   const cookies = await page.cookies();
-  // ファイルに保持
   fs.writeFileSync(cookie_path, JSON.stringify(cookies));
 
   await browser.close();
 };
 
 const loginByCookie = async() => {
-  // インスタンス作成
   const browser = await puppeteer.launch({
     args: [
     '--no-sandbox',
@@ -66,5 +71,7 @@ const loginByCookie = async() => {
   return [page, browser];
 }
 
+
 exports.loginByNameAndPW = loginByNameAndPW;
 exports.loginByCookie = loginByCookie;
+
