@@ -30,29 +30,30 @@ const loginByNameAndPW = async() => {
 
   let username = rls.question('username: ');
   let password = rls.question('password: ', {hideEchoBack: true});
-  // usename欄にusername書いて
   await page.type('input[name="username"]', username);
-  // password欄にpassword書いて
   await page.type('input[name="password"]', password);
   // 60000msでタイムアウトし、ページが遷移するまで待機する設定
   const navigationPromise = page.waitForNavigation({
     timeout: 60000, waitUntil: "domcontentloaded"
   });
-  // ログインをクリック
   await page.click('#submit');
   // 待つ
   await navigationPromise;
+  const url_after_logging = await page['_target']['_targetInfo']['title'];
 
+  if(url_after_logging == login_url){
+    console.log('Error! Wrong username or password!');
+    await browser.close();
+    return;
+  }
   // cookie取得
   const cookies = await page.cookies();
-  // ファイルに保持
   fs.writeFileSync(cookie_path, JSON.stringify(cookies));
 
   await browser.close();
 };
 
 const loginByCookie = async() => {
-  // インスタンス作成
   const browser = await puppeteer.launch({
     args: [
     '--no-sandbox',
@@ -65,8 +66,10 @@ const loginByCookie = async() => {
   const cookies = JSON.parse(fs.readFileSync(cookie_path, 'utf-8'));
   for(let cookie of cookies) await page.setCookie(cookie);
 
+  browser.close();
   return [page, browser];
 }
+
 
 exports.loginByNameAndPW = loginByNameAndPW;
 exports.loginByCookie = loginByCookie;
