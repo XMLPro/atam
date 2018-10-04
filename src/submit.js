@@ -5,7 +5,7 @@ const login = require('./login')
 
 const base_url = 'https://beta.atcoder.jp/contests/'
 const cookie_path = './cookie_login.json';
-const submit = async(logined_page, prob, prob_number, prob_hard, lang, source_code) => {
+const submit = async(logined_page, prob, prob_number, task, lang, source_code) => {
   const submit_url = `${base_url}${prob}${prob_number}/submit`
   const page = logined_page;
 
@@ -17,7 +17,6 @@ const submit = async(logined_page, prob, prob_number, prob_hard, lang, source_co
 
   await page.screenshot({path: 'submit_result1.png'}); // debug!!!!!!!!
 
-  const task = `${prob}${prob_number}_${prob_hard}`;
   await page.select('select[name="data.TaskScreenName"]', task);
   await page.select('select[name="data.LanguageId"]', lang);
   await page.click('button.btn-toggle-editor');
