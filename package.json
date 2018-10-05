@@ -24,14 +24,12 @@
     "atam": "src/atam.js"
   },
   "dependencies": {
+    "commander": "^2.18.0",
     "fuse.js": "^3.2.1",
     "inquirer": "^6.2.0",
     "inquirer-autocomplete-prompt": "^1.0.1",
     "puppeteer": "^1.7.0",
     "query-string": "^6.1.0",
     "readline-sync": "^1.4.9"
-  },
-  "devDependencies": {
-    "commander": "^2.18.0"
   }
 }
