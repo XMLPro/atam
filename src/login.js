@@ -65,9 +65,17 @@ const loginByCookie = async() => {
   const page = await browser.newPage();
 
   // cookiesの読み込み
-  const cookies = JSON.parse(fs.readFileSync(cookie_path, 'utf-8'));
-  for(let cookie of cookies) await page.setCookie(cookie);
+  let cookies;
+  try {
+    cookies = JSON.parse(fs.readFileSync(cookie_path, 'utf-8'));
+  } catch (e) {
+    console.log('Error!! Faild login.');
+    console.log('Try "atam -l" in your terminal');
+    browser.close();
+    process.exit(1);
+  }
 
+  for(let cookie of cookies) await page.setCookie(cookie);
   return [page, browser];
 }
 
