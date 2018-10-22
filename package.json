@@ -24,6 +24,7 @@
     "atam": "src/atam.js"
   },
   "dependencies": {
+    "chalk": "^2.4.1",
     "commander": "^2.18.0",
     "fuse.js": "^3.2.1",
     "inquirer": "^6.2.0",
