@@ -6,6 +6,7 @@ const fs = require('fs');
 const rls = require('readline-sync');
 
 const mkdotfile = require('./mkdotfile');
+const color = require('./message_color');
 
 const login_url = "https://beta.atcoder.jp/login";
 const cookie_path = `${mkdotfile.dotfile_path}/cookie_login.json`;
@@ -23,8 +24,7 @@ const loginByNameAndPW = async() => {
   try {
     await page.goto(login_url);
   } catch (e) {
-    console.log(e);
-    console.log('check network connection.');
+    console.log(color.error('check network connection.'));
     browser.close();
     return;
   }
@@ -43,11 +43,11 @@ const loginByNameAndPW = async() => {
   const url_after_logging = await page['_target']['_targetInfo']['title'];
 
   if(url_after_logging == login_url){
-    console.log('Error! Wrong username or password.');
+    console.log(color.error('Error! Wrong username or password.'));
     await browser.close();
     return;
   }
-  else console.log('Complete login!!');
+  else console.log(color.success('Complete login!!'));
   // cookie取得
   const cookies = await page.cookies();
   fs.writeFileSync(cookie_path, JSON.stringify(cookies));
