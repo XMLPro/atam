@@ -2,15 +2,15 @@
 const fs = require('fs');
 const os = require('os');
 
-const dotfile_path = `${os.homedir()}/.atam`;
+const dotfilePath = `${os.homedir()}/.atam`;
 
 function mkdotfile() {
   try {
-    const dir = fs.readdirSync(dotfile_path);
+    const dir = fs.readdirSync(dotfilePath);
   } catch (e) {
-    fs.mkdirSync(dotfile_path);
+    fs.mkdirSync(dotfilePath);
   }
 }
 
-exports.dotfile_path = dotfile_path;
+exports.dotfilePath = dotfilePath;
 exports.mkdotfile = mkdotfile;
