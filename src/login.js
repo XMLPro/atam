@@ -7,8 +7,8 @@ const rls = require('readline-sync');
 
 const mkdotfile = require('./mkdotfile');
 
-const login_url = 'https://beta.atcoder.jp/login';
-const cookie_path = `${mkdotfile.dotfile_path}/cookie_login.json`;
+const loginUrl = 'https://beta.atcoder.jp/login';
+const cookiePath = `${mkdotfile.dotfile_path}/cookie_login.json`;
 
 const loginByNameAndPW = async () => {
   mkdotfile.mkdotfile();
@@ -21,7 +21,7 @@ const loginByNameAndPW = async () => {
   const page = await browser.newPage();
 
   try {
-    await page.goto(login_url);
+    await page.goto(loginUrl);
   } catch (e) {
     console.log(e);
     console.log('check network connection.');
@@ -40,9 +40,9 @@ const loginByNameAndPW = async () => {
   await page.click('#submit');
   // 待つ
   await navigationPromise;
-  const url_after_logging = await page._target._targetInfo.title;
+  const urlAfterLogging = await page._target._targetInfo.title;
 
-  if (url_after_logging == login_url) {
+  if (urlAfterLogging == loginUrl) {
     console.log('Error! Wrong username or password.');
     await browser.close();
     return;
@@ -50,7 +50,7 @@ const loginByNameAndPW = async () => {
   console.log('Complete login!!');
   // cookie取得
   const cookies = await page.cookies();
-  fs.writeFileSync(cookie_path, JSON.stringify(cookies));
+  fs.writeFileSync(cookiePath, JSON.stringify(cookies));
 
   await browser.close();
 };
@@ -65,7 +65,7 @@ const loginByCookie = async () => {
   const page = await browser.newPage();
 
   // cookiesの読み込み
-  const cookies = JSON.parse(fs.readFileSync(cookie_path, 'utf-8'));
+  const cookies = JSON.parse(fs.readFileSync(cookiePath, 'utf-8'));
   for (const cookie of cookies) await page.setCookie(cookie);
 
   return [page, browser];
