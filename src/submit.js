@@ -4,7 +4,7 @@ const fs = require('fs');
 const login = require('./login');
 
 const baseUrl = 'https://beta.atcoder.jp/contests/';
-const cookiePath = './cookie_login.json';
+const cookiePath = './cookieLogin.json';
 const submit = async (loginedPage, prob, probNumber, task, lang, sourceCode) => {
   const submitUrl = `${baseUrl}${prob}${probNumber}/submit`;
   const page = loginedPage;
