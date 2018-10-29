@@ -8,7 +8,7 @@ const rls = require('readline-sync');
 const mkdotfile = require('./mkdotfile');
 
 const loginUrl = 'https://beta.atcoder.jp/login';
-const cookiePath = `${mkdotfile.dotfile_path}/cookieLogin.json`;
+const cookiePath = `${mkdotfile.dotfilePath}/cookieLogin.json`;
 
 const loginByNameAndPW = async () => {
   mkdotfile.mkdotfile();
