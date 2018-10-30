@@ -3,8 +3,8 @@ const inquirer = require('inquirer');
 const Fuse = require('fuse.js');
 const fs = require('fs');
 
-const base_url = 'https://beta.atcoder.jp/contests/';
-const lang_id_options = {
+const baseUrl = 'https://beta.atcoder.jp/contests/';
+const langIdOptions = {
   shouldSort: true,
   threshold: 0.6,
   location: 0,
@@ -16,7 +16,7 @@ const lang_id_options = {
   ],
 };
 
-const problem_id_options = {
+const problemIdOptions = {
   shouldSort: true,
   threshold: 0.6,
   location: 0,
@@ -28,12 +28,12 @@ const problem_id_options = {
   ],
 };
 
-async function get_lang_id(logined_page, prob, prob_number) {
-  const url = `${base_url}${prob}${prob_number}/submit`;
+async function getLangId(loginedPage, prob, probNumber) {
+  const url = `${baseUrl}${prob}${probNumber}/submit`;
 
-  await logined_page.goto(url);
+  await loginedPage.goto(url);
 
-  const items = await logined_page.$$('select[name="data.LanguageId"] option');
+  const items = await loginedPage.$$('select[name="data.LanguageId"] option');
   const langId = {};
   for (const item of items) {
     const id = await (await item.getProperty('value')).jsonValue();
@@ -44,7 +44,7 @@ async function get_lang_id(logined_page, prob, prob_number) {
 
   const language = Object.keys(langId).map(elm => ({ lang: elm }));
 
-  const fuse = new Fuse(language, lang_id_options);
+  const fuse = new Fuse(language, langIdOptions);
 
   const prompt = inquirer.createPromptModule();
   prompt.registerPrompt('autocomplete', require('inquirer-autocomplete-prompt'));
@@ -60,12 +60,12 @@ async function get_lang_id(logined_page, prob, prob_number) {
 }
 
 
-async function get_problem_id(logined_page, prob, prob_number) {
-  const url = `${base_url}${prob}${prob_number}/submit`;
+async function getProblemId(loginedPage, prob, probNumber) {
+  const url = `${baseUrl}${prob}${probNumber}/submit`;
 
-  await logined_page.goto(url);
+  await loginedPage.goto(url);
 
-  const items = await logined_page.$$('select[name="data.TaskScreenName"] option');
+  const items = await loginedPage.$$('select[name="data.TaskScreenName"] option');
   const TaskScreenName = {};
   for (const item of items) {
     const id = await (await item.getProperty('value')).jsonValue();
@@ -76,7 +76,7 @@ async function get_problem_id(logined_page, prob, prob_number) {
 
   const Task = Object.keys(TaskScreenName).map(elm => ({ problem: elm }));
 
-  const fuse = new Fuse(Task, problem_id_options);
+  const fuse = new Fuse(Task, problemIdOptions);
 
   const prompt = inquirer.createPromptModule();
   prompt.registerPrompt('autocomplete', require('inquirer-autocomplete-prompt'));
@@ -91,12 +91,12 @@ async function get_problem_id(logined_page, prob, prob_number) {
   }).then(answer => TaskScreenName[answer.problem]);
 }
 
-function get_source(source_name) {
-  const source = fs.readFileSync(source_name, 'utf-8');
+function getSource(sourceName) {
+  const source = fs.readFileSync(sourceName, 'utf-8');
   return source;
 }
 
 
-exports.get_lang_id = get_lang_id;
-exports.get_problem_id = get_problem_id;
-exports.get_source = get_source;
+exports.getLangId = getLangId;
+exports.getProblemId = getProblemId;
+exports.getSource = getSource;
