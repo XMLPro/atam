@@ -22,10 +22,10 @@ if (opt.login) {
     const page = data[0];
     const browser = data[1];
 
-    const source_code = gets.get_source(filename);
-    let lang = await gets.get_lang_id(page, prob, number);
-    let task = await gets.get_problem_id(page, prob, number);
-    await submit(page, prob, number, task, lang, source_code);
+    const sourceCode = gets.getSource(filename);
+    let lang = await gets.getLangId(page, prob, number);
+    let task = await gets.getProblemId(page, prob, number);
+    await submit(page, prob, number, task, lang, sourceCode);
     browser.close();
   } else {
     opt.outputHelp();
