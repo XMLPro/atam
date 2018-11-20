@@ -42,7 +42,7 @@ const loginByNameAndPW = async () => {
   await navigationPromise;
   const urlAfterLogging = await page._target._targetInfo.title;
 
-  if(url_after_logging == login_url){
+  if(urlAfterLogging === loginUrl){
     console.log(color.error('Error! Wrong username or password.'));
     await browser.close();
     return;
@@ -69,8 +69,8 @@ const loginByCookie = async () => {
   try {
     cookies = JSON.parse(fs.readFileSync(cookiePath, 'utf-8'));
   } catch (e) {
-    console.log('Error!! Faild login.');
-    console.log('Try "atam -l" in your terminal');
+    console.log(color.error('Error!! Faild login.'));
+    console.log('Try "atam -l"');
     browser.close();
     process.exit(1);
   }
