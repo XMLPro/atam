@@ -6,6 +6,7 @@ const fs = require('fs');
 const rls = require('readline-sync');
 
 const mkdotfile = require('./mkdotfile');
+const color = require('./message_color');
 
 const loginUrl = 'https://beta.atcoder.jp/login';
 const cookiePath = `${mkdotfile.dotfilePath}/cookieLogin.json`;
@@ -23,8 +24,7 @@ const loginByNameAndPW = async () => {
   try {
     await page.goto(loginUrl);
   } catch (e) {
-    console.log(e);
-    console.log('check network connection.');
+    console.log(color.error('check network connection.'));
     browser.close();
     return;
   }
@@ -42,12 +42,12 @@ const loginByNameAndPW = async () => {
   await navigationPromise;
   const urlAfterLogging = await page._target._targetInfo.title;
 
-  if (urlAfterLogging == loginUrl) {
-    console.log('Error! Wrong username or password.');
+  if(urlAfterLogging === loginUrl){
+    console.log(color.error('Error! Wrong username or password.'));
     await browser.close();
     return;
   }
-  console.log('Complete login!!');
+  else console.log(color.success('Complete login!!'));
   // cookie取得
   const cookies = await page.cookies();
   fs.writeFileSync(cookiePath, JSON.stringify(cookies));
@@ -69,8 +69,8 @@ const loginByCookie = async () => {
   try {
     cookies = JSON.parse(fs.readFileSync(cookiePath, 'utf-8'));
   } catch (e) {
-    console.log('Error!! Faild login.');
-    console.log('Try "atam -l" in your terminal');
+    console.log(color.error('Error!! Faild login.'));
+    console.log('Try "atam -l"');
     browser.close();
     process.exit(1);
   }
