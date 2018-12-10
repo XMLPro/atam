@@ -1,7 +1,8 @@
-const puppeteer = require('puppeteer');
 const inquirer = require('inquirer');
 const Fuse = require('fuse.js');
 const fs = require('fs');
+
+const autocompletePrompt = require('inquirer-autocomplete-prompt');
 
 const baseUrl = 'https://beta.atcoder.jp/contests/';
 const langIdOptions = {
@@ -35,6 +36,8 @@ async function getLangId(loginedPage, prob, probNumber) {
 
   const items = await loginedPage.$$('select[name="data.LanguageId"] option');
   const langId = {};
+
+  // items.forEach(async (item) => { });
   for (const item of items) {
     const id = await (await item.getProperty('value')).jsonValue();
     const lang = await (await item.getProperty('textContent')).jsonValue();
@@ -47,7 +50,7 @@ async function getLangId(loginedPage, prob, probNumber) {
   const fuse = new Fuse(language, langIdOptions);
 
   const prompt = inquirer.createPromptModule();
-  prompt.registerPrompt('autocomplete', require('inquirer-autocomplete-prompt'));
+  prompt.registerPrompt('autocomplete', autocompletePrompt);
 
   return prompt({
     type: 'autocomplete',
@@ -79,7 +82,7 @@ async function getProblemId(loginedPage, prob, probNumber) {
   const fuse = new Fuse(Task, problemIdOptions);
 
   const prompt = inquirer.createPromptModule();
-  prompt.registerPrompt('autocomplete', require('inquirer-autocomplete-prompt'));
+  prompt.registerPrompt('autocomplete', autocompletePrompt);
 
   return prompt({
     type: 'autocomplete',
