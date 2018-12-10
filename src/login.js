@@ -48,7 +48,10 @@ const loginByNameAndPW = async () => {
   if (urlAfterLogging === loginUrl) {
     console.log(color.error('Error! Wrong username or password.'));
     await browser.close();
-  } else console.log(color.success('Complete login!!'));
+    process.exit();
+  } else {
+    console.log(color.success('Complete login!!'));
+  }
   // cookie取得
   const cookies = await page.cookies();
   fs.writeFileSync(cookiePath, JSON.stringify(cookies));
