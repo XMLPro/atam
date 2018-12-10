@@ -16,7 +16,6 @@ const submit = async (loginedPage, prob, probNumber, task, lang, sourceCode) => 
   await page.type('textarea[name="sourceCode"]', sourceCode);
   page.click('#submit');
   await page.waitForNavigation({ timeout: 60000, waitUntil: 'domcontentloaded' });
-
 };
 
 exports.submit = submit;
