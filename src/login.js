@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 
-
 const puppeteer = require('puppeteer');
 const fs = require('fs');
 const rls = require('readline-sync');
@@ -40,14 +39,16 @@ const loginByNameAndPW = async () => {
   await page.click('#submit');
   // 待つ
   await navigationPromise;
+
+  // 要素にアンダースコアが入っているので仕方なし
+  /* eslint no-underscore-dangle:
+     ["error", { "allow": ["_targetInfo", "_target"] }] */
   const urlAfterLogging = await page._target._targetInfo.title;
 
-  if(urlAfterLogging === loginUrl){
+  if (urlAfterLogging === loginUrl) {
     console.log(color.error('Error! Wrong username or password.'));
     await browser.close();
-    return;
-  }
-  else console.log(color.success('Complete login!!'));
+  } else console.log(color.success('Complete login!!'));
   // cookie取得
   const cookies = await page.cookies();
   fs.writeFileSync(cookiePath, JSON.stringify(cookies));
@@ -74,6 +75,7 @@ const loginByCookie = async () => {
     browser.close();
     process.exit(1);
   }
+  // cookies.forEach(async (cookie) => { await page.setCookie(cookie); });
   for (const cookie of cookies) await page.setCookie(cookie);
 
   return [page, browser];
