@@ -9,7 +9,7 @@ AtCoderへの提出をCLI上で行うことができるツールです、ブラ�
 npmにて公開しています。
 
 ```bash
-$ npm install -g atam
+$ sudo npm install -g atam --unsafe-perm=true
 ```
 
 ### 使用方法
