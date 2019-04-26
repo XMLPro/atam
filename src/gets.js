@@ -35,11 +35,12 @@ async function get_lang_id(logined_page, prob, prob_number) {
 
   const items = await logined_page.$$('select[name="data.LanguageId"] option');
   const langId = {};
-  for (const item of items) {
+  await logined_page.screenshot({path: "lg.png"})
+  await Promise.all(items.map(async item => {
     const id = await (await item.getProperty('value')).jsonValue();
     const lang = await (await item.getProperty('textContent')).jsonValue();
     langId[lang] = id;
-  }
+  }));
 
 
   const language = Object.keys(langId).map(elm => ({ lang: elm }));
@@ -67,12 +68,11 @@ async function get_problem_id(logined_page, prob, prob_number) {
 
   const items = await logined_page.$$('select[name="data.TaskScreenName"] option');
   const TaskScreenName = {};
-  for (const item of items) {
+  await Promise.all(items.map(async item => {
     const id = await (await item.getProperty('value')).jsonValue();
     const problem = await (await item.getProperty('textContent')).jsonValue();
     TaskScreenName[problem] = id;
-  }
-
+  }));
 
   const Task = Object.keys(TaskScreenName).map(elm => ({ problem: elm }));
 
