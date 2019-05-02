@@ -1,14 +1,14 @@
 #!/usr/bin/env node
 
-
 const puppeteer = require('puppeteer');
 const fs = require('fs');
 const rls = require('readline-sync');
 
 const mkdotfile = require('./mkdotfile');
+const color = require('./message_color');
 
-const login_url = 'https://beta.atcoder.jp/login';
-const cookie_path = `${mkdotfile.dotfile_path}/cookie_login.json`;
+const loginUrl = 'https://beta.atcoder.jp/login';
+const cookiePath = `${mkdotfile.dotfilePath}/cookieLogin.json`;
 
 const loginByNameAndPW = async () => {
   mkdotfile.mkdotfile();
@@ -21,10 +21,9 @@ const loginByNameAndPW = async () => {
   const page = await browser.newPage();
 
   try {
-    await page.goto(login_url);
+    await page.goto(loginUrl);
   } catch (e) {
-    console.log(e);
-    console.log('check network connection.');
+    console.log(color.error('check network connection.'));
     browser.close();
     return;
   }
@@ -40,17 +39,22 @@ const loginByNameAndPW = async () => {
   await page.click('#submit');
   // 待つ
   await navigationPromise;
-  const url_after_logging = await page._target._targetInfo.title;
 
-  if (url_after_logging == login_url) {
-    console.log('Error! Wrong username or password.');
+  // 要素にアンダースコアが入っているので仕方なし
+  /* eslint no-underscore-dangle:
+     ["error", { "allow": ["_targetInfo", "_target"] }] */
+  const urlAfterLogging = await page._target._targetInfo.title;
+
+  if (urlAfterLogging === loginUrl) {
+    console.log(color.error('Error! Wrong username or password.'));
     await browser.close();
-    return;
+    process.exit();
+  } else {
+    console.log(color.success('Complete login!!'));
   }
-  console.log('Complete login!!');
   // cookie取得
   const cookies = await page.cookies();
-  fs.writeFileSync(cookie_path, JSON.stringify(cookies));
+  fs.writeFileSync(cookiePath, JSON.stringify(cookies));
 
   await browser.close();
 };
@@ -65,7 +69,17 @@ const loginByCookie = async () => {
   const page = await browser.newPage();
 
   // cookiesの読み込み
-  const cookies = JSON.parse(fs.readFileSync(cookie_path, 'utf-8'));
+  let cookies;
+  try {
+    cookies = JSON.parse(fs.readFileSync(cookiePath, 'utf-8'));
+  } catch (e) {
+    console.log(color.error('Error!! Faild login.'));
+    console.log('Try "atam -l"');
+    browser.close();
+    process.exit(1);
+  }
+  // cookies.forEach(async (cookie) => { await page.setCookie(cookie); });
+  for (const cookie of cookies) await page.setCookie(cookie);
   await page.setCookie(...cookies);
 
   return [page, browser];

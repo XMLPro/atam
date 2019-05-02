@@ -3,4 +3,4 @@
 /experiment/*.json
 *.png
 yarn-error.log
-cookie_login.json
+cookieLogin.json
