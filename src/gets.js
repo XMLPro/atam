@@ -35,7 +35,6 @@ async function get_lang_id(logined_page, prob, prob_number) {
 
   const items = await logined_page.$$('select[name="data.LanguageId"] option');
   const langId = {};
-  await logined_page.screenshot({path: "lg.png"})
   await Promise.all(items.map(async item => {
     const id = await (await item.getProperty('value')).jsonValue();
     const lang = await (await item.getProperty('textContent')).jsonValue();
