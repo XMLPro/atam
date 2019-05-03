@@ -2,8 +2,9 @@ const puppeteer = require('puppeteer');
 const queryString = require('query-string');
 const fs = require('fs');
 const login = require('./login');
+const consts = require('./consts');
 
-const baseUrl = 'https://beta.atcoder.jp/contests/';
+const baseUrl = `${consts.atcoderUrl}/contests/`;
 const cookiePath = './cookieLogin.json';
 const submit = async (loginedPage, prob, probNumber, task, lang, sourceCode) => {
   const submitUrl = `${baseUrl}${prob}${probNumber}/submit`;
