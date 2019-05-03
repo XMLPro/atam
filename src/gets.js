@@ -1,10 +1,11 @@
 const inquirer = require('inquirer');
 const Fuse = require('fuse.js');
 const fs = require('fs');
-
 const autocompletePrompt = require('inquirer-autocomplete-prompt');
 
-const baseUrl = 'https://beta.atcoder.jp/contests/';
+const consts = require('./consts');
+
+const baseUrl = `${consts.atcoderUrl}/contests/`;
 const langIdOptions = {
   shouldSort: true,
   threshold: 0.6,

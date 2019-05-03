@@ -1,4 +1,6 @@
-const baseUrl = 'https://beta.atcoder.jp/contests/';
+const consts = require('./consts');
+
+const baseUrl = `${consts.atcoderUrl}/contests/`;
 
 const submit = async (loginedPage, prob, probNumber, task, lang, sourceCode) => {
   const submitUrl = `${baseUrl}${prob}${probNumber}/submit`;
