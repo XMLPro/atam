@@ -1,11 +1,8 @@
-const puppeteer = require('puppeteer');
-const queryString = require('query-string');
-const fs = require('fs');
-const login = require('./login');
 const color = require('./message_color');
 
-const baseUrl = 'https://beta.atcoder.jp/contests/';
 const submissionsUrl = 'submissions/me';
+const baseUrl = 'https://beta.atcoder.jp/contests/';
+
 const submit = async (loginedPage, prob, probNumber, task, lang, sourceCode) => {
   const submitUrl = `${baseUrl}${prob}${probNumber}/submit`;
   const page = loginedPage;
@@ -23,12 +20,12 @@ const submit = async (loginedPage, prob, probNumber, task, lang, sourceCode) => 
 
   page.click('#submit');
   await page.waitForNavigation({ timeout: 60000, waitUntil: 'domcontentloaded' });
-  if(page.url().endsWith(submissionsUrl)){
+  if (page.url().endsWith(submissionsUrl)) {
     console.log(color.success('提出が完了しました'));
   } else {
     console.log(color.error('提出できませんでした'));
   }
-  console.log('url: ' + await page.url())
+  console.log(`url: ${await page.url()}`);
 };
 
 exports.submit = submit;
