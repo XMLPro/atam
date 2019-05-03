@@ -1,4 +1,4 @@
-const chalk = require('chalk')
+const chalk = require('chalk');
 
 const error = chalk.bold.red;
 const warning = chalk.keyword('orange');
@@ -9,5 +9,5 @@ module.exports = {
   error,
   warning,
   success,
-  info
-}
+  info,
+};

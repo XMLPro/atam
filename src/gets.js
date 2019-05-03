@@ -1,7 +1,8 @@
-const puppeteer = require('puppeteer');
 const inquirer = require('inquirer');
 const Fuse = require('fuse.js');
 const fs = require('fs');
+const autocompletePrompt = require('inquirer-autocomplete-prompt');
+
 const consts = require('./consts');
 
 const baseUrl = `${consts.atcoderUrl}/contests/`;
@@ -36,11 +37,12 @@ async function getLangId(loginedPage, prob, probNumber) {
 
   const items = await loginedPage.$$('select[name="data.LanguageId"] option');
   const langId = {};
-  for (const item of items) {
+  console.log('ok');
+  await Promise.all(items.map(async (item) => {
     const id = await (await item.getProperty('value')).jsonValue();
     const lang = await (await item.getProperty('textContent')).jsonValue();
     langId[lang] = id;
-  }
+  }));
 
 
   const language = Object.keys(langId).map(elm => ({ lang: elm }));
@@ -48,7 +50,7 @@ async function getLangId(loginedPage, prob, probNumber) {
   const fuse = new Fuse(language, langIdOptions);
 
   const prompt = inquirer.createPromptModule();
-  prompt.registerPrompt('autocomplete', require('inquirer-autocomplete-prompt'));
+  prompt.registerPrompt('autocomplete', autocompletePrompt);
 
   return prompt({
     type: 'autocomplete',
@@ -68,19 +70,18 @@ async function getProblemId(loginedPage, prob, probNumber) {
 
   const items = await loginedPage.$$('select[name="data.TaskScreenName"] option');
   const TaskScreenName = {};
-  for (const item of items) {
+  await Promise.all(items.map(async (item) => {
     const id = await (await item.getProperty('value')).jsonValue();
     const problem = await (await item.getProperty('textContent')).jsonValue();
     TaskScreenName[problem] = id;
-  }
-
+  }));
 
   const Task = Object.keys(TaskScreenName).map(elm => ({ problem: elm }));
 
   const fuse = new Fuse(Task, problemIdOptions);
 
   const prompt = inquirer.createPromptModule();
-  prompt.registerPrompt('autocomplete', require('inquirer-autocomplete-prompt'));
+  prompt.registerPrompt('autocomplete', autocompletePrompt);
 
   return prompt({
     type: 'autocomplete',

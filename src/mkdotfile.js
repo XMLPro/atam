@@ -6,7 +6,7 @@ const dotfilePath = `${os.homedir()}/.atam`;
 
 function mkdotfile() {
   try {
-    const dir = fs.readdirSync(dotfilePath);
+    fs.readdirSync(dotfilePath);
   } catch (e) {
     fs.mkdirSync(dotfilePath);
   }
