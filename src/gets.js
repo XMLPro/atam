@@ -36,8 +36,8 @@ async function getLangId(loginedPage, prob, probNumber) {
 
   const items = await loginedPage.$$('select[name="data.LanguageId"] option');
   const langId = {};
-  console.log("ok");
-  await Promise.all(items.map(async item => {
+  console.log('ok');
+  await Promise.all(items.map(async (item) => {
     const id = await (await item.getProperty('value')).jsonValue();
     const lang = await (await item.getProperty('textContent')).jsonValue();
     langId[lang] = id;
@@ -69,7 +69,7 @@ async function getProblemId(loginedPage, prob, probNumber) {
 
   const items = await loginedPage.$$('select[name="data.TaskScreenName"] option');
   const TaskScreenName = {};
-  await Promise.all(items.map(async item => {
+  await Promise.all(items.map(async (item) => {
     const id = await (await item.getProperty('value')).jsonValue();
     const problem = await (await item.getProperty('textContent')).jsonValue();
     TaskScreenName[problem] = id;

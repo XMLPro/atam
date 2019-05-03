@@ -78,8 +78,6 @@ const loginByCookie = async () => {
     browser.close();
     process.exit(1);
   }
-  // cookies.forEach(async (cookie) => { await page.setCookie(cookie); });
-  for (const cookie of cookies) await page.setCookie(cookie);
   await page.setCookie(...cookies);
 
   return [page, browser];
