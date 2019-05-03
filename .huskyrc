@@ -1,5 +1,3 @@
-{
-  "hooks": {
-    "pre-commit": "yarn test"
-  }
+"hooks": {
+  "pre-commit": "yarn run eslint"
 }
