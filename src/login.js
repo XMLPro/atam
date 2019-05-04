@@ -1,25 +1,19 @@
 #!/usr/bin/env node
 
-const puppeteer = require('puppeteer');
 const fs = require('fs');
 const rls = require('readline-sync');
 
 const consts = require('./consts');
 const mkdotfile = require('./mkdotfile');
 const color = require('./message_color');
+const utils = require('./utils');
 
 const loginUrl = `${consts.atcoderUrl}/login`;
 const cookiePath = `${mkdotfile.dotfilePath}/cookieLogin.json`;
 
 const loginByNameAndPW = async () => {
   mkdotfile.mkdotfile();
-  const browser = await puppeteer.launch({
-    args: [
-      '--no-sandbox',
-      '--disable-setuid-sandbox',
-    ],
-  });
-  const page = await browser.newPage();
+  const [page, browser] = await utils.createBrowser();
 
   try {
     await page.goto(loginUrl);
@@ -61,13 +55,7 @@ const loginByNameAndPW = async () => {
 };
 
 const loginByCookie = async () => {
-  const browser = await puppeteer.launch({
-    args: [
-      '--no-sandbox',
-      '--disable-setuid-sandbox',
-    ],
-  });
-  const page = await browser.newPage();
+  const [page, browser] = await utils.createBrowser();
 
   // cookiesの読み込み
   let cookies;
