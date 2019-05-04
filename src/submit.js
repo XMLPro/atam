@@ -1,7 +1,9 @@
 const color = require('./message_color');
 
+const consts = require('./consts');
+
 const submissionsUrl = 'submissions/me';
-const baseUrl = 'https://beta.atcoder.jp/contests/';
+const baseUrl = `${consts.atcoderUrl}/contests/`;
 
 const submit = async (loginedPage, prob, probNumber, task, lang, sourceCode) => {
   const submitUrl = `${baseUrl}${prob}${probNumber}/submit`;

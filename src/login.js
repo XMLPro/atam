@@ -4,10 +4,11 @@ const puppeteer = require('puppeteer');
 const fs = require('fs');
 const rls = require('readline-sync');
 
+const consts = require('./consts');
 const mkdotfile = require('./mkdotfile');
 const color = require('./message_color');
 
-const loginUrl = 'https://beta.atcoder.jp/login';
+const loginUrl = `${consts.atcoderUrl}/login`;
 const cookiePath = `${mkdotfile.dotfilePath}/cookieLogin.json`;
 
 const loginByNameAndPW = async () => {
