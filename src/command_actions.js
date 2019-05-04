@@ -1,23 +1,6 @@
-// const utils = require('./utils');
-// const gets = require('./gets');
 const loginMod = require('./login');
 const submitMod = require('./submit');
 const gets = require('./gets');
-//
-// async function sampleCase(prob, number, ...commands) {
-//   const task = 'abc001_1';
-//   const [browser, page] = await utils.createBrowser();
-//   const samples = await gets.getSamples(page, prob, number, task);
-//   // samples.each(() => {
-//   //   console.log(this);
-//   // });
-//
-//   browser.close();
-// }
-//
-// async function test() {
-//   console.log("this is test");
-// }
 
 async function login() {
   loginMod.loginByNameAndPW();
