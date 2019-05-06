@@ -23,7 +23,31 @@ function helpMessage({ message, example }) {
   console.log();
 }
 
+async function syncEach(array, f) {
+  const createFunc = value => () => f(value);
+  let tmp = { then: dummy => dummy() };
+  while (array.length !== 0) {
+    tmp = tmp.then(createFunc(array.shift()));
+  }
+  await tmp;
+}
+
+async function syncMap(array, f) {
+  const result = [];
+  const createFunc = value => (ret) => {
+    result.push(ret);
+    return f(value);
+  };
+  let tmp = { then: dummy => dummy() };
+  while (array.length !== 0) {
+    tmp = tmp.then(createFunc(array.shift()));
+  }
+  return tmp.then(ret => result.slice(1).concat(ret));
+}
+
 module.exports = {
   createBrowser,
   helpMessage,
+  syncEach,
+  syncMap,
 };

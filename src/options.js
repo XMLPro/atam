@@ -25,6 +25,23 @@ program
   });
 
 program
+  .command('sample <prob> <number> [commands...]')
+  .description('Check sample case')
+  .action(actions.sample)
+  .on('--help', () => {
+    utils.helpMessage({
+      message: [
+        'prob (e.g.: abc)',
+        'number (e.g.: 001)',
+        'commands (e.g.: python main.py)',
+      ],
+      example: [
+        'sample abc 001 main.js',
+      ],
+    });
+  });
+
+program
   .command('submit <filename> <prob> <number>')
   .alias('s')
   .description('Submit your code')
