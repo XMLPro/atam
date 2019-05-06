@@ -17,7 +17,7 @@ $ sudo npm install -g atam --unsafe-perm=true
 まず初めにatamを利用したAtCoderへのログインが必要となります。
 
 ```bash
-$ atam -l
+$ atam l
 ```
 
 上記のコマンドを実行した後にユーザ名とパスワードを聞かれるのでログインをしてください、なおこの操作は初回1度のみの実行です。
@@ -25,18 +25,18 @@ $ atam -l
 atamコマンドの引数に、提出したいファイル、コンテスト名、コンテスト回数を渡します。
 
 ```bash
-$ atam <提出したいファイル> <コンテスト名> <コンテスト回数>
+$ atam submit <提出したいファイル> <コンテスト名> <コンテスト回数>
 ```
 
 上記のコマンドを実行すると以下のような表示が行われます。
 
-![select_lang](https://user-images.githubusercontent.com/30762583/46478314-a6a65b00-c827-11e8-8750-ef2cbff526ab.png)
+![select_lang](https://user-images.githubusercontent.com/31335755/57209379-6accb180-7013-11e9-8c64-3b7708a4f528.png)
 
 上記の表示が行われた際に、提出ファイルの言語を選択してください、なおこの状態であいまい検索での言語選択が可能となっております。
 
 言語の選択が終了したあと以下のような表示に遷移し、提出する問題を選択する状態になります。
 
-![select_pro](https://user-images.githubusercontent.com/30762583/46478316-a8701e80-c827-11e8-809b-5e0cc4ba6830.png)
+![select_pro](https://user-images.githubusercontent.com/31335755/57209389-761fdd00-7013-11e9-8988-c534471be68e.png)
 
 上記の状態も言語選択と同様、あいまい検索での問題検索が可能となっております。
 
