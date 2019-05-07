@@ -25,11 +25,11 @@ function helpMessage({ message, example }) {
 
 async function syncEach(array, f) {
   const createFunc = value => () => f(value);
-  let tmp = { then: dummy => dummy() };
+  let prev = Promise.resolve();
   while (array.length !== 0) {
-    tmp = tmp.then(createFunc(array.shift()));
+    prev = prev.then(createFunc(array.shift()));
   }
-  await tmp;
+  await prev;
 }
 
 async function syncMap(array, f) {
@@ -38,11 +38,11 @@ async function syncMap(array, f) {
     result.push(ret);
     return f(value);
   };
-  let tmp = { then: dummy => dummy() };
+  let prev = Promise.resolve();
   while (array.length !== 0) {
-    tmp = tmp.then(createFunc(array.shift()));
+    prev = prev.then(createFunc(array.shift()));
   }
-  return tmp.then(ret => result.slice(1).concat(ret));
+  return prev.then(ret => result.slice(1).concat(ret));
 }
 
 module.exports = {
