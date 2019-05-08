@@ -10,7 +10,7 @@ async function login() {
   loginMod.loginByNameAndPW();
 }
 
-async function submit(filename, prob, number) {
+async function submit(prob, number, filename) {
   const [page, browser] = await loginMod.loginByCookie();
 
   const sourceCode = gets.getSource(filename);

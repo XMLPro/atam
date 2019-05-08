@@ -25,7 +25,8 @@ program
   });
 
 program
-  .command('sample <prob> <number> [commands...]')
+  .command('test <prob> <number> [commands...]')
+  .alias('t')
   .description('Check sample case')
   .action(actions.sample)
   .on('--help', () => {
@@ -36,13 +37,15 @@ program
         'commands (e.g.: python main.py)',
       ],
       example: [
-        'sample abc 001 main.js',
+        'test abc 001 node main.js',
+        'test abc 010 ./a.out',
+        't abc 011 python main.py',
       ],
     });
   });
 
 program
-  .command('submit <filename> <prob> <number>')
+  .command('submit <prob> <number> <filename>')
   .alias('s')
   .description('Submit your code')
   .action(actions.submit)
