@@ -1,7 +1,9 @@
 const cheerio = require('cheerio');
+const notifier = require('node-notifier');
 
 const login = require('./login.js');
 const consts = require('./consts');
+const gets = require('./gets');
 
 const [sids, prob, number] = process.argv.slice(2);
 const targetProb = `${prob}${number || ''}`;
@@ -31,10 +33,15 @@ console.log(url);
       return true;
     }).get().every(value => value);
     if (judges) {
-      console.log('----- ok ----------');
-      console.log($('td').map((i, e) => $(e).text()).get());
+      const resultData = $('td').map((i, e) => $(e).text()).get();
       clearInterval(id);
-      // const  = await gets.getResult(loginedPage, prob, number, sids);
+      const allResult = await gets.getResult(loginedPage, prob, number, sids);
+      notifier.notify({
+        title: 'atcoder',
+        subtitle: allResult.information[1],
+        message: resultData.join('\t'),
+        wait: 0.1,
+      });
       // await utils.printResult(result);
       await browser.close();
     }
