@@ -4,6 +4,7 @@ const fs = require('fs');
 const autocompletePrompt = require('inquirer-autocomplete-prompt');
 
 const consts = require('./consts');
+const utils = require('./utils');
 
 const baseUrl = `${consts.atcoderUrl}/contests/`;
 const langIdOptions = {
@@ -33,7 +34,7 @@ const problemIdOptions = {
 async function getLangId(loginedPage, prob, probNumber) {
   const url = `${baseUrl}${prob}${probNumber}/submit`;
 
-  await loginedPage.goto(url);
+  await utils.waitFor(loginedPage, p => p.goto(url));
 
   const items = await loginedPage.$$('select[name="data.LanguageId"] option');
   const langId = {};
@@ -65,7 +66,7 @@ async function getLangId(loginedPage, prob, probNumber) {
 async function getProblemId(loginedPage, prob, probNumber) {
   const url = `${baseUrl}${prob}${probNumber}/submit`;
 
-  await loginedPage.goto(url);
+  await utils.waitFor(loginedPage, p => p.goto(url));
 
   const items = await loginedPage.$$('select[name="data.TaskScreenName"] option');
   const TaskScreenName = {};

@@ -23,7 +23,15 @@ function helpMessage({ message, example }) {
   console.log();
 }
 
+async function waitFor(page, func) {
+  await Promise.all([
+    func(page),
+    page.waitForNavigation({ timeout: 60000, waitUntil: 'domcontentloaded' }),
+  ]);
+}
+
 module.exports = {
   createBrowser,
   helpMessage,
+  waitFor,
 };
