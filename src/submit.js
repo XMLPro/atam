@@ -1,5 +1,6 @@
-const color = require('./message_color');
+const { spawn } = require('child_process');
 
+const color = require('./message_color');
 const consts = require('./consts');
 
 const submissionsUrl = 'submissions/me';
@@ -22,8 +23,15 @@ const submit = async (loginedPage, prob, probNumber, task, lang, sourceCode) => 
 
   page.click('#submit');
   await page.waitForNavigation({ timeout: 60000, waitUntil: 'domcontentloaded' });
-  if (page.url().endsWith(submissionsUrl)) {
+  if ((await page.url()).endsWith(submissionsUrl)) {
     console.log(color.success('提出が完了しました'));
+    const sids = await page.evaluate(
+      element => element.getAttribute('data-id'),
+      await page.waitForSelector('.submission-score'),
+    );
+
+    const proc = spawn('node', [`${__dirname}/result_announcer.js`, sids], { stdio: 'inherit' });
+    proc.unref();
   } else {
     console.log(color.error('提出できませんでした'));
   }
