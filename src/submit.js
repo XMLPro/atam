@@ -30,7 +30,7 @@ const submit = async (loginedPage, prob, probNumber, task, lang, sourceCode) => 
       await page.waitForSelector('.submission-score'),
     );
 
-    const proc = spawn('node', [`${__dirname}/result_announcer.js`, sids], { stdio: 'inherit' });
+    const proc = spawn('node', [`${__dirname}/result_announcer.js`, sids, prob, probNumber], { stdio: 'inherit' });
     proc.unref();
   } else {
     console.log(color.error('提出できませんでした'));

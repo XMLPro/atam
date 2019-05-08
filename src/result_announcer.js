@@ -3,8 +3,9 @@ const cheerio = require('cheerio');
 const login = require('./login.js');
 const consts = require('./consts');
 
-const sids = process.argv[2];
-const url = `${consts.atcoderUrl}/contests/abc001/submissions/me/status/json?sids[]=${sids}`;
+const [sids, prob, number] = process.argv.slice(2);
+const targetProb = `${prob}${number || ''}`
+const url = `${consts.atcoderUrl}/contests/${targetProb}/submissions/me/status/json?sids[]=${sids}`;
 
 (async () => {
   const [loginedPage, browser] = await login.loginByCookie();
@@ -23,7 +24,6 @@ const url = `${consts.atcoderUrl}/contests/abc001/submissions/me/status/json?sid
     const judges = $('.waiting-judge').map((i, e) => {
       if (limit === 0) return true;
       if (sids === $(e).attr('data-id')) {
-        console.log('waiting...');
         return false;
       }
       return true;
