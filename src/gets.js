@@ -97,7 +97,33 @@ function getSource(sourceName) {
   return source;
 }
 
+async function getResult(page, prob, probNumber, sids) {
+  const targetProb = `${prob}${probNumber || ''}`;
+  const url = `${consts.atcoderUrl}/contests/${targetProb}/submissions/${sids}`;
+
+  await Promise.all([
+    page.goto(url),
+    page.waitForNavigation({ timeout: 60000, waitUntil: 'domcontentloaded' }),
+  ]);
+
+  // スクレイピングによりデータを取得し、整形する。
+  const parseList = await page.evaluate(() => {
+    // tableクラス内の要素を取り出す。
+    const tableList = document.querySelectorAll('table');
+    // 要素が適切にわけられた配列。
+    // tableListを型変換しつつdataListに渡す。
+    const dataList = Array.from(tableList).map(node => node.innerText);
+    // AtCoderには、tableクラスの2番目にサンプルの可否があるので、そこだけ取り出す。
+    const data = dataList[2].split('\n');
+    // 改行区切りで分割。ここで再び配列になる。
+    // 各要素をタブで分割する。二次元配列になる。
+    return data.map(value => value.split('\t'));
+  });
+  return parseList;
+}
+
 
 exports.getLangId = getLangId;
 exports.getProblemId = getProblemId;
 exports.getSource = getSource;
+exports.getResult = getResult;

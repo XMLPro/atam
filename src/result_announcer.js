@@ -4,9 +4,11 @@ const login = require('./login.js');
 const consts = require('./consts');
 
 const [sids, prob, number] = process.argv.slice(2);
-const targetProb = `${prob}${number || ''}`
+const targetProb = `${prob}${number || ''}`;
 const url = `${consts.atcoderUrl}/contests/${targetProb}/submissions/me/status/json?sids[]=${sids}`;
+console.log(url);
 
+// 自分の提出以外は受け付けません
 (async () => {
   const [loginedPage, browser] = await login.loginByCookie();
   let limit = 60 * 5; // time out on 5 minutes.
@@ -30,8 +32,10 @@ const url = `${consts.atcoderUrl}/contests/${targetProb}/submissions/me/status/j
     }).get().every(value => value);
     if (judges) {
       console.log('----- ok ----------');
-      console.log(html);
+      console.log($('td').map((i, e) => $(e).text()).get());
       clearInterval(id);
+      // const  = await gets.getResult(loginedPage, prob, number, sids);
+      // await utils.printResult(result);
       await browser.close();
     }
     limit -= 1;

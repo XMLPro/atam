@@ -26,7 +26,7 @@ const submit = async (loginedPage, prob, probNumber, task, lang, sourceCode) => 
   if ((await page.url()).endsWith(submissionsUrl)) {
     console.log(color.success('提出が完了しました'));
     const sids = await page.evaluate(
-      element => element.getAttribute('data-id'),
+      item => item.getAttribute('data-id'),
       await page.waitForSelector('.submission-score'),
     );
 
