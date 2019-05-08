@@ -8,7 +8,6 @@ const gets = require('./gets');
 const [sids, prob, number] = process.argv.slice(2);
 const targetProb = `${prob}${number || ''}`;
 const url = `${consts.atcoderUrl}/contests/${targetProb}/submissions/me/status/json?sids[]=${sids}`;
-console.log(url);
 
 // 自分の提出以外は受け付けません
 (async () => {
