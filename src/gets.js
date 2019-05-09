@@ -4,6 +4,7 @@ const fs = require('fs');
 const autocompletePrompt = require('inquirer-autocomplete-prompt');
 
 const consts = require('./consts');
+const utils = require('./utils');
 
 const baseUrl = `${consts.atcoderUrl}/contests/`;
 const langIdOptions = {
@@ -29,6 +30,24 @@ const problemIdOptions = {
     'problem',
   ],
 };
+
+async function getSamples(page, prob, probNumber, task) {
+  const url = `${baseUrl}${prob}${probNumber}/tasks/${task}`;
+
+  await page.goto(url);
+
+  let samples = await page.$$('pre[id^="pre-sample"]');
+  if (samples.length === 0) {
+    samples = await page.$$('pre[id^="for_copy"]');
+  }
+
+  const results = await utils.syncMap(samples,
+    async value => (await value.getProperty('textContent')).jsonValue());
+  const sampleCase = Array.from({
+    length: results.length / 2,
+  }).map((v, i) => [results[i * 2], results[i * 2 + 1]]);
+  return sampleCase; // input, output
+}
 
 async function getLangId(loginedPage, prob, probNumber) {
   const url = `${baseUrl}${prob}${probNumber}/submit`;
@@ -127,8 +146,10 @@ async function getResult(page, prob, probNumber, sids) {
   return { information, result };
 }
 
-
-exports.getLangId = getLangId;
-exports.getProblemId = getProblemId;
-exports.getSource = getSource;
-exports.getResult = getResult;
+module.exports = {
+  getLangId,
+  getProblemId,
+  getSource,
+  getSamples,
+  getResult,
+};
