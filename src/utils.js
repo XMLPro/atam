@@ -27,7 +27,7 @@ async function waitFor(page, func) {
   await Promise.all([
     func(page),
     page.waitForNavigation({ timeout: 60000, waitUntil: 'domcontentloaded' }),
-  ])
+  ]);
 }
 
 async function syncEach(array, f) {
