@@ -16,7 +16,7 @@ const loginByNameAndPW = async () => {
   const [page, browser] = await utils.createBrowser();
 
   try {
-    await page.goto(loginUrl);
+    await utils.waitFor(page, p => p.goto(loginUrl));
   } catch (e) {
     console.log(color.error('check network connection.'));
     browser.close();
@@ -27,13 +27,7 @@ const loginByNameAndPW = async () => {
   const password = rls.question('password: ', { hideEchoBack: true });
   await page.type('input[name="username"]', username);
   await page.type('input[name="password"]', password);
-  // 60000msでタイムアウトし、ページが遷移するまで待機する設定
-  const navigationPromise = page.waitForNavigation({
-    timeout: 60000, waitUntil: 'domcontentloaded',
-  });
-  await page.click('#submit');
-  // 待つ
-  await navigationPromise;
+  await utils.waitFor(page, p => p.click('#submit'));
 
   // 要素にアンダースコアが入っているので仕方なし
   /* eslint no-underscore-dangle:

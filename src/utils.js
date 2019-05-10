@@ -23,6 +23,13 @@ function helpMessage({ message, example }) {
   console.log();
 }
 
+async function waitFor(page, func) {
+  await Promise.all([
+    func(page),
+    page.waitForNavigation({ timeout: 60000, waitUntil: 'domcontentloaded' }),
+  ]);
+}
+
 async function syncEach(array, f) {
   const createFunc = value => () => f(value);
   let prev = Promise.resolve();
@@ -48,6 +55,7 @@ async function syncMap(array, f) {
 module.exports = {
   createBrowser,
   helpMessage,
+  waitFor,
   syncEach,
   syncMap,
 };

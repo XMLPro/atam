@@ -52,7 +52,7 @@ async function getSamples(page, prob, probNumber, task) {
 async function getLangId(loginedPage, prob, probNumber) {
   const url = `${baseUrl}${prob}${probNumber}/submit`;
 
-  await loginedPage.goto(url);
+  await utils.waitFor(loginedPage, p => p.goto(url));
 
   const items = await loginedPage.$$('select[name="data.LanguageId"] option');
   const langId = {};
@@ -84,7 +84,7 @@ async function getLangId(loginedPage, prob, probNumber) {
 async function getProblemId(loginedPage, prob, probNumber) {
   const url = `${baseUrl}${prob}${probNumber}/submit`;
 
-  await loginedPage.goto(url);
+  await utils.waitFor(loginedPage, p => p.goto(url));
 
   const items = await loginedPage.$$('select[name="data.TaskScreenName"] option');
   const TaskScreenName = {};
