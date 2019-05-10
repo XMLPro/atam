@@ -42,6 +42,13 @@ async function printResult(scrapingData) {
   });
 }
 
+async function waitFor(page, func) {
+  await Promise.all([
+    func(page),
+    page.waitForNavigation({ timeout: 60000, waitUntil: 'domcontentloaded' }),
+  ]);
+}
+
 async function syncEach(array, f) {
   const createFunc = value => () => f(value);
   let prev = Promise.resolve();
@@ -68,6 +75,7 @@ module.exports = {
   createBrowser,
   helpMessage,
   printResult,
+  waitFor,
   syncEach,
   syncMap,
 };
