@@ -1,28 +1,22 @@
 #!/usr/bin/env node
 
-
-const puppeteer = require('puppeteer');
 const fs = require('fs');
 const rls = require('readline-sync');
 
+const consts = require('./consts');
 const mkdotfile = require('./mkdotfile');
 const color = require('./message_color');
+const utils = require('./utils');
 
-const loginUrl = 'https://beta.atcoder.jp/login';
+const loginUrl = `${consts.atcoderUrl}/login`;
 const cookiePath = `${mkdotfile.dotfilePath}/cookieLogin.json`;
 
 const loginByNameAndPW = async () => {
   mkdotfile.mkdotfile();
-  const browser = await puppeteer.launch({
-    args: [
-      '--no-sandbox',
-      '--disable-setuid-sandbox',
-    ],
-  });
-  const page = await browser.newPage();
+  const [page, browser] = await utils.createBrowser();
 
   try {
-    await page.goto(loginUrl);
+    await utils.waitFor(page, p => p.goto(loginUrl));
   } catch (e) {
     console.log(color.error('check network connection.'));
     browser.close();
@@ -33,21 +27,20 @@ const loginByNameAndPW = async () => {
   const password = rls.question('password: ', { hideEchoBack: true });
   await page.type('input[name="username"]', username);
   await page.type('input[name="password"]', password);
-  // 60000msでタイムアウトし、ページが遷移するまで待機する設定
-  const navigationPromise = page.waitForNavigation({
-    timeout: 60000, waitUntil: 'domcontentloaded',
-  });
-  await page.click('#submit');
-  // 待つ
-  await navigationPromise;
+  await utils.waitFor(page, p => p.click('#submit'));
+
+  // 要素にアンダースコアが入っているので仕方なし
+  /* eslint no-underscore-dangle:
+     ["error", { "allow": ["_targetInfo", "_target"] }] */
   const urlAfterLogging = await page._target._targetInfo.title;
 
-  if(urlAfterLogging === loginUrl){
+  if (urlAfterLogging === loginUrl) {
     console.log(color.error('Error! Wrong username or password.'));
     await browser.close();
-    return;
+    process.exit();
+  } else {
+    console.log(color.success('Complete login!!'));
   }
-  else console.log(color.success('Complete login!!'));
   // cookie取得
   const cookies = await page.cookies();
   fs.writeFileSync(cookiePath, JSON.stringify(cookies));
@@ -56,13 +49,7 @@ const loginByNameAndPW = async () => {
 };
 
 const loginByCookie = async () => {
-  const browser = await puppeteer.launch({
-    args: [
-      '--no-sandbox',
-      '--disable-setuid-sandbox',
-    ],
-  });
-  const page = await browser.newPage();
+  const [page, browser] = await utils.createBrowser();
 
   // cookiesの読み込み
   let cookies;
@@ -74,7 +61,7 @@ const loginByCookie = async () => {
     browser.close();
     process.exit(1);
   }
-  for (const cookie of cookies) await page.setCookie(cookie);
+  await page.setCookie(...cookies);
 
   return [page, browser];
 };
