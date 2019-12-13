@@ -31,8 +31,8 @@ const problemIdOptions = {
   ],
 };
 
-async function getSamples(page, prob, probNumber, task) {
-  const url = `${baseUrl}${prob}${probNumber}/tasks/${task}`;
+async function getSamples(page, prob, task) {
+  const url = `${baseUrl}${prob}/tasks/${task}`;
 
   await page.goto(url);
 
@@ -49,8 +49,8 @@ async function getSamples(page, prob, probNumber, task) {
   return sampleCase; // input, output
 }
 
-async function getLangId(loginedPage, prob, probNumber) {
-  const url = `${baseUrl}${prob}${probNumber}/submit`;
+async function getLangId(loginedPage, prob) {
+  const url = `${baseUrl}${prob}/submit`;
 
   await utils.waitFor(loginedPage, p => p.goto(url));
 
@@ -81,8 +81,8 @@ async function getLangId(loginedPage, prob, probNumber) {
 }
 
 
-async function getProblemId(loginedPage, prob, probNumber) {
-  const url = `${baseUrl}${prob}${probNumber}/submit`;
+async function getProblemId(loginedPage, prob) {
+  const url = `${baseUrl}${prob}/submit`;
 
   await utils.waitFor(loginedPage, p => p.goto(url));
 

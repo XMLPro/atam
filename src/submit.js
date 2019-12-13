@@ -6,8 +6,8 @@ const utils = require('./utils');
 const submissionsUrl = 'submissions/me';
 const baseUrl = `${consts.atcoderUrl}/contests/`;
 
-const submit = async (loginedPage, prob, probNumber, task, lang, sourceCode) => {
-  const submitUrl = `${baseUrl}${prob}${probNumber}/submit`;
+const submit = async (loginedPage, prob, task, lang, sourceCode) => {
+  const submitUrl = `${baseUrl}${prob}/submit`;
   const page = loginedPage;
 
   await utils.waitFor(page, p => p.goto(submitUrl));
