@@ -5,9 +5,8 @@ const login = require('./login.js');
 const consts = require('./consts');
 const gets = require('./gets');
 
-const [sids, prob, number] = process.argv.slice(2);
-const targetProb = `${prob}${number || ''}`;
-const url = `${consts.atcoderUrl}/contests/${targetProb}/submissions/me/status/json?sids[]=${sids}`;
+const [sids, prob] = process.argv.slice(2);
+const url = `${consts.atcoderUrl}/contests/${prob}/submissions/me/status/json?sids[]=${sids}`;
 
 // 自分の提出以外は受け付けません
 (async () => {
@@ -35,7 +34,7 @@ const url = `${consts.atcoderUrl}/contests/${targetProb}/submissions/me/status/j
       if (judges) {
         const resultData = $('td').map((i, e) => $(e).text()).get();
         clearInterval(id);
-        const allResult = await gets.getResult(loginedPage, prob, number, sids);
+        const allResult = await gets.getResult(loginedPage, prob, sids);
         notifier.notify({
           title: 'atcoder',
           subtitle: allResult.information[1],
@@ -47,6 +46,7 @@ const url = `${consts.atcoderUrl}/contests/${targetProb}/submissions/me/status/j
       }
       limit -= 1;
     } catch (error) {
+      console.log(error);
       console.log('エラーにより通知機能が動きません');
       clearInterval(id);
       await browser.close();
