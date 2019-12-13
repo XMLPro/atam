@@ -116,10 +116,40 @@ function getSource(sourceName) {
   return source;
 }
 
+async function getResult(page, prob, probNumber, sids) {
+  const targetProb = `${prob}${probNumber || ''}`;
+  const url = `${consts.atcoderUrl}/contests/${targetProb}/submissions/${sids}`;
+
+  await Promise.all([
+    page.goto(url),
+    page.waitForNavigation({ timeout: 60000, waitUntil: 'domcontentloaded' }),
+  ]);
+
+  const information = await page.evaluate(
+    item => Array.from(item.querySelectorAll('td')).map(e => e.textContent),
+    await page.waitForSelector('.panel.panel-default'),
+  );
+
+  // スクレイピングによりデータを取得し、整形する。
+  const result = await page.evaluate(() => {
+    // tableクラス内の要素を取り出す。
+    const tableList = document.querySelectorAll('table');
+    // 要素が適切にわけられた配列。
+    // tableListを型変換しつつdataListに渡す。
+    const dataList = Array.from(tableList).map(node => node.innerText);
+    // AtCoderには、tableクラスの2番目にサンプルの可否があるので、そこだけ取り出す。
+    // 改行区切りで分割。
+    const data = dataList[2].split('\n');
+    // 各要素をタブで分割する。二次元配列になる。
+    return data.map(value => value.split('\t'));
+  });
+  return { information, result };
+}
 
 module.exports = {
   getLangId,
   getProblemId,
   getSource,
   getSamples,
+  getResult,
 };
