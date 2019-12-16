@@ -31,8 +31,8 @@ const problemIdOptions = {
   ],
 };
 
-async function getSamples(page, prob, probNumber, task) {
-  const url = `${baseUrl}${prob}${probNumber}/tasks/${task}`;
+async function getSamples(page, prob, task) {
+  const url = `${baseUrl}${prob}/tasks/${task}`;
 
   await page.goto(url);
 
@@ -49,8 +49,8 @@ async function getSamples(page, prob, probNumber, task) {
   return sampleCase; // input, output
 }
 
-async function getLangId(loginedPage, prob, probNumber) {
-  const url = `${baseUrl}${prob}${probNumber}/submit`;
+async function getLangId(loginedPage, prob) {
+  const url = `${baseUrl}${prob}/submit`;
 
   await utils.waitFor(loginedPage, p => p.goto(url));
 
@@ -81,8 +81,8 @@ async function getLangId(loginedPage, prob, probNumber) {
 }
 
 
-async function getProblemId(loginedPage, prob, probNumber) {
-  const url = `${baseUrl}${prob}${probNumber}/submit`;
+async function getProblemId(loginedPage, prob) {
+  const url = `${baseUrl}${prob}/submit`;
 
   await utils.waitFor(loginedPage, p => p.goto(url));
 
@@ -116,9 +116,8 @@ function getSource(sourceName) {
   return source;
 }
 
-async function getResult(page, prob, probNumber, sids) {
-  const targetProb = `${prob}${probNumber || ''}`;
-  const url = `${consts.atcoderUrl}/contests/${targetProb}/submissions/${sids}`;
+async function getResult(page, prob, sids) {
+  const url = `${consts.atcoderUrl}/contests/${prob}/submissions/${sids}`;
 
   await Promise.all([
     page.goto(url),
@@ -139,9 +138,12 @@ async function getResult(page, prob, probNumber, sids) {
     const dataList = Array.from(tableList).map(node => node.innerText);
     // AtCoderには、tableクラスの2番目にサンプルの可否があるので、そこだけ取り出す。
     // 改行区切りで分割。
-    const data = dataList[2].split('\n');
-    // 各要素をタブで分割する。二次元配列になる。
-    return data.map(value => value.split('\t'));
+    if (dataList.length > 2) {
+      const data = dataList[2].split('\n');
+      // 各要素をタブで分割する。二次元配列になる。
+      return data.map(value => value.split('\t'));
+    }
+    return '';
   });
   return { information, result };
 }

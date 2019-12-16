@@ -10,13 +10,13 @@ async function login() {
   loginMod.loginByNameAndPW();
 }
 
-async function submit(prob, number, filename) {
+async function submit(prob, filename) {
   const [page, browser] = await loginMod.loginByCookie();
 
   const sourceCode = gets.getSource(filename);
-  const lang = await gets.getLangId(page, prob, number);
-  const task = await gets.getProblemId(page, prob, number);
-  await submitMod.submit(page, prob, number, task, lang, sourceCode);
+  const lang = await gets.getLangId(page, prob);
+  const task = await gets.getProblemId(page, prob);
+  await submitMod.submit(page, prob, task, lang, sourceCode);
   browser.close();
 }
 
@@ -53,10 +53,10 @@ function execSampleCase(commands, input, output) {
   });
 }
 
-async function sample(prob, number, commands) {
+async function sample(prob, commands) {
   const [page, browser] = await loginMod.loginByCookie();
-  const task = await gets.getProblemId(page, prob, number);
-  const samples = await gets.getSamples(page, prob, number, task);
+  const task = await gets.getProblemId(page, prob);
+  const samples = await gets.getSamples(page, prob, task);
   utils.syncMap(samples, value => execSampleCase(commands, ...value));
 
   browser.close();
