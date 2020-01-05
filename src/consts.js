@@ -1,7 +1,8 @@
-const atcoderUrl = 'https://atcoder.jp';
-
-// more
+const mkdotfile = require('./mkdotfile');
 
 module.exports = {
-  atcoderUrl,
+  atcoderUrl: 'https://atcoder.jp',
+  cookiePath: `${mkdotfile.dotfilePath}/cookieLogin.json`,
+
+  // more
 };

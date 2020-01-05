@@ -61,6 +61,23 @@ program
   });
 
 program
+  .command('new <prob>')
+  .alias('n')
+  .description('Create dir tree')
+  .action(actions.createDirTree)
+  .on('--help', () => {
+    utils.helpMessage({
+      message: [
+        'prob (e.g.: abc001)',
+      ],
+      example: [
+        'new abc001',
+        'n abs',
+      ],
+    });
+  });
+
+program
   .parse(process.argv);
 
 module.exports = program;

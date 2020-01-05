@@ -62,8 +62,17 @@ async function sample(prob, commands) {
   browser.close();
 }
 
+async function createDirTree(prob) {
+  const [page, browser] = await loginMod.loginByCookie();
+  const task = await gets.getProblemIds(page, prob);
+  const taskIds = Object.values(task);
+  console.log(taskIds);
+  browser.close();
+}
+
 module.exports = {
   login,
   submit,
   sample,
+  createDirTree,
 };
