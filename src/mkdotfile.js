@@ -1,12 +1,8 @@
-const os = require('os');
-
 const utils = require('./utils');
-
-const dotfilePath = `${os.homedir()}/.atam`;
+const consts = require('./consts');
 
 function mkdotfile() {
-  utils.mkdirIfNotExists(dotfilePath);
+  utils.mkdirIfNotExists(consts.dotfilePath);
 }
 
-exports.dotfilePath = dotfilePath;
 exports.mkdotfile = mkdotfile;

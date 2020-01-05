@@ -64,7 +64,7 @@ program
   .command('new <prob>')
   .alias('n')
   .description('Create dir tree')
-  .action(actions.createDirTree)
+  .action(actions.createDirTreeCmd)
   .on('--help', () => {
     utils.helpMessage({
       message: [
