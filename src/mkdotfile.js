@@ -1,15 +1,11 @@
-#!/usr/bin/env node
-const fs = require('fs');
 const os = require('os');
+
+const utils = require('./utils');
 
 const dotfilePath = `${os.homedir()}/.atam`;
 
 function mkdotfile() {
-  try {
-    fs.readdirSync(dotfilePath);
-  } catch (e) {
-    fs.mkdirSync(dotfilePath);
-  }
+  utils.mkdirIfNotExists(dotfilePath);
 }
 
 exports.dotfilePath = dotfilePath;

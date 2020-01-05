@@ -109,6 +109,14 @@ function getRequest(prob, type, callback) {
   });
 }
 
+function mkdirIfNotExists(path) {
+  try {
+    fs.readdirSync(path);
+  } catch (e) {
+    fs.mkdirSync(path);
+  }
+}
+
 module.exports = {
   createBrowser,
   helpMessage,
@@ -118,4 +126,5 @@ module.exports = {
   syncMap,
   getRequest,
   getCookie,
+  mkdirIfNotExists,
 };
