@@ -102,7 +102,7 @@ function getRequest(prob, type, callback) {
         data += chunk;
       });
 
-      res.on('end', () => resolve(callback(data)));
+      res.on('end', () => resolve(callback(data, res)));
     });
 
     req.end();

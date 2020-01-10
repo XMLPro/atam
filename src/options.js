@@ -44,7 +44,7 @@ program
   });
 
 program
-  .command('submit <prob> <filename>')
+  .command('submit [prob] [filename]')
   .alias('s')
   .description('Submit your code')
   .action(actions.submit)

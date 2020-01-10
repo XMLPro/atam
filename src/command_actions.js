@@ -12,12 +12,24 @@ async function login() {
 }
 
 async function submit(prob, filename) {
+  let paramFilename = filename;
+  let paramProb = prob;
+  if (filename === undefined) {
+    paramFilename = prob;
+    paramProb = await dirTree.getProbFromCWD();
+  }
+
+  if (paramProb === undefined) {
+    console.log(color.error('問題が不明です'));
+    process.exit(1);
+  }
+
   const [page, browser] = await loginMod.loginByCookie();
 
-  const sourceCode = gets.getSource(filename);
-  const lang = await gets.getLangId(page, prob);
-  const task = await gets.getProblemId(page, prob);
-  await submitMod.submit(page, prob, task, lang, sourceCode);
+  const sourceCode = gets.getSource(paramFilename);
+  const lang = await gets.getLangId(page, paramProb);
+  const task = await gets.getProblemId(page, paramProb);
+  await submitMod.submit(page, paramProb, task, lang, sourceCode);
   browser.close();
 }
 
