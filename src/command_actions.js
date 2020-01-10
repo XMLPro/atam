@@ -67,9 +67,20 @@ function execSampleCase(commands, input, output) {
 }
 
 async function sample(prob, commands) {
+  let probId = prob;
+  if (!await utils.probExists(probId)) {
+    commands.unshift(probId);
+    probId = await dirTree.getProbFromCWD();
+  }
+
+  if (probId === undefined) {
+    console.log(color.error('問題が不明です'));
+    process.exit(1);
+  }
+
   const [page, browser] = await loginMod.loginByCookie();
-  const task = await gets.getProblemId(page, prob);
-  const samples = await gets.getSamples(page, prob, task);
+  const task = await gets.getProblemId(page, probId);
+  const samples = await gets.getSamples(page, probId, task);
   utils.syncMap(samples, value => execSampleCase(commands, ...value));
 
   browser.close();

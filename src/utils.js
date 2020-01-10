@@ -119,6 +119,11 @@ function mkdirIfNotExists(path) {
   }
 }
 
+async function probExists(prob) {
+  const result = await getRequest(prob, '', (data, response) => response.statusCode === 200);
+  return result;
+}
+
 module.exports = {
   createBrowser,
   helpMessage,
@@ -129,4 +134,5 @@ module.exports = {
   getRequest,
   getCookie,
   mkdirIfNotExists,
+  probExists,
 };
