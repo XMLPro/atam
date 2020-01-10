@@ -5,7 +5,6 @@ module.exports = {
   dotfilePath,
   atcoderUrl: 'https://atcoder.jp',
   cookiePath: `${dotfilePath}/cookieLogin.json`,
-  dirTreeConf: '.atam.json',
 
   // more
 };
