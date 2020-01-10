@@ -5,6 +5,7 @@ const submitMod = require('./submit');
 const gets = require('./gets');
 const utils = require('./utils');
 const color = require('./message_color');
+const dirTree = require('./dir_tree');
 
 async function login() {
   loginMod.loginByNameAndPW();
@@ -62,8 +63,13 @@ async function sample(prob, commands) {
   browser.close();
 }
 
+async function createDirTreeCmd(prob) {
+  dirTree.createDirTree(prob);
+}
+
 module.exports = {
   login,
   submit,
   sample,
+  createDirTreeCmd,
 };

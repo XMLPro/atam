@@ -1,7 +1,10 @@
-const atcoderUrl = 'https://atcoder.jp';
+const os = require('os');
 
-// more
-
+const dotfilePath = `${os.homedir()}/.atam`;
 module.exports = {
-  atcoderUrl,
+  dotfilePath,
+  atcoderUrl: 'https://atcoder.jp',
+  cookiePath: `${dotfilePath}/cookieLogin.json`,
+
+  // more
 };

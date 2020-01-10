@@ -1,15 +1,12 @@
-#!/usr/bin/env node
-
 const fs = require('fs');
 const rls = require('readline-sync');
 
 const consts = require('./consts');
-const mkdotfile = require('./mkdotfile');
 const color = require('./message_color');
 const utils = require('./utils');
 
 const loginUrl = `${consts.atcoderUrl}/login`;
-const cookiePath = `${mkdotfile.dotfilePath}/cookieLogin.json`;
+const mkdotfile = require('./mkdotfile');
 
 const loginByNameAndPW = async () => {
   mkdotfile.mkdotfile();
@@ -43,29 +40,23 @@ const loginByNameAndPW = async () => {
   }
   // cookie取得
   const cookies = await page.cookies();
-  fs.writeFileSync(cookiePath, JSON.stringify(cookies));
+  fs.writeFileSync(consts.cookiePath, JSON.stringify(cookies));
 
   await browser.close();
 };
 
 const loginByCookie = async () => {
-  const [page, browser] = await utils.createBrowser();
-
   // cookiesの読み込み
-  let cookies;
-  try {
-    cookies = JSON.parse(fs.readFileSync(cookiePath, 'utf-8'));
-  } catch (e) {
-    console.log(color.error('Error!! Faild login.'));
-    console.log('Try "atam -l"');
-    browser.close();
-    process.exit(1);
-  }
+  const cookies = utils.getCookie();
+  if (cookies == null) process.exit(1);
+
+  const [page, browser] = await utils.createBrowser();
   await page.setCookie(...cookies);
 
   return [page, browser];
 };
 
-
-exports.loginByNameAndPW = loginByNameAndPW;
-exports.loginByCookie = loginByCookie;
+module.exports = {
+  loginByNameAndPW,
+  loginByCookie,
+};

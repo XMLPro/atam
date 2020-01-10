@@ -1,5 +1,10 @@
 const puppeteer = require('puppeteer');
 const notifier = require('node-notifier');
+const https = require('https');
+const fs = require('fs');
+
+const color = require('./message_color');
+const consts = require('./consts');
 
 async function createBrowser() {
   const browser = await puppeteer.launch({
@@ -71,6 +76,49 @@ async function syncMap(array, f) {
   return prev.then(ret => result.slice(1).concat(ret));
 }
 
+function getCookie() {
+  try {
+    return JSON.parse(fs.readFileSync(consts.cookiePath, 'utf-8'));
+  } catch (e) {
+    console.log(color.error('Error!! Faild login.'));
+    console.log('Try "atam -l"');
+    return null;
+  }
+}
+
+function getRequest(prob, type, callback) {
+  const path = `/contests/${prob}/${type}`;
+  const { hostname } = new URL(consts.atcoderUrl);
+
+  const cookies = getCookie();
+  if (cookies == null) process.exit(1);
+  const cookie = cookies.map(e => `${e.name}=${e.value}`);
+  const headers = { cookie };
+
+  return new Promise((resolve) => {
+    const req = https.request({ hostname, path, headers }, (res) => {
+      let data = '';
+      res.on('data', (chunk) => {
+        data += chunk;
+      });
+
+      res.on('end', () => resolve(callback(data)));
+    });
+
+    req.end();
+  });
+}
+
+function mkdirIfNotExists(path) {
+  try {
+    fs.readdirSync(path);
+    return false;
+  } catch (e) {
+    fs.mkdirSync(path);
+    return true;
+  }
+}
+
 module.exports = {
   createBrowser,
   helpMessage,
@@ -78,4 +126,7 @@ module.exports = {
   waitFor,
   syncEach,
   syncMap,
+  getRequest,
+  getCookie,
+  mkdirIfNotExists,
 };

@@ -2,6 +2,7 @@ const inquirer = require('inquirer');
 const Fuse = require('fuse.js');
 const fs = require('fs');
 const autocompletePrompt = require('inquirer-autocomplete-prompt');
+const cheerio = require('cheerio');
 
 const consts = require('./consts');
 const utils = require('./utils');
@@ -80,23 +81,25 @@ async function getLangId(loginedPage, prob) {
   }).then(answer => langId[answer.lang]);
 }
 
+async function getProblemIds(prob) {
+  const ids = await utils.getRequest(prob, 'submissions/me', (data) => {
+    const $ = cheerio.load(data);
+    const result = {};
+    $('#select-task option').each((i, e) => {
+      const elm = $(e);
+      const id = elm.attr('value');
+      if (id !== '') result[elm.text()] = id;
+    });
+    return result;
+  });
+  return ids;
+}
 
 async function getProblemId(loginedPage, prob) {
-  const url = `${baseUrl}${prob}/submit`;
+  const taskScreenName = await getProblemIds(prob);
+  const task = Object.keys(taskScreenName).map(elm => ({ problem: elm }));
 
-  await utils.waitFor(loginedPage, p => p.goto(url));
-
-  const items = await loginedPage.$$('select[name="data.TaskScreenName"] option');
-  const TaskScreenName = {};
-  await Promise.all(items.map(async (item) => {
-    const id = await (await item.getProperty('value')).jsonValue();
-    const problem = await (await item.getProperty('textContent')).jsonValue();
-    TaskScreenName[problem] = id;
-  }));
-
-  const Task = Object.keys(TaskScreenName).map(elm => ({ problem: elm }));
-
-  const fuse = new Fuse(Task, problemIdOptions);
+  const fuse = new Fuse(task, problemIdOptions);
 
   const prompt = inquirer.createPromptModule();
   prompt.registerPrompt('autocomplete', autocompletePrompt);
@@ -106,9 +109,9 @@ async function getProblemId(loginedPage, prob) {
     name: 'problem',
     message: '問題を選んでね！！！！ >> ',
     source: async (answer, input) => (
-      input ? fuse.search(input) : Task
+      input ? fuse.search(input) : task
     ).map(elm => elm.problem),
-  }).then(answer => TaskScreenName[answer.problem]);
+  }).then(answer => taskScreenName[answer.problem]);
 }
 
 function getSource(sourceName) {
@@ -151,6 +154,7 @@ async function getResult(page, prob, sids) {
 module.exports = {
   getLangId,
   getProblemId,
+  getProblemIds,
   getSource,
   getSamples,
   getResult,
