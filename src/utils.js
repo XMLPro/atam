@@ -112,8 +112,10 @@ function getRequest(prob, type, callback) {
 function mkdirIfNotExists(path) {
   try {
     fs.readdirSync(path);
+    return false;
   } catch (e) {
     fs.mkdirSync(path);
+    return true;
   }
 }
 
