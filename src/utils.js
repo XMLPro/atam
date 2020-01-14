@@ -119,6 +119,17 @@ function mkdirIfNotExists(path) {
   }
 }
 
+function urlToProb(url) {
+  return new URL(url).pathname.split('/')[2]; // '', 'contests', '<prob>', ...
+}
+
+function unificationOfProb(prob) {
+  if (prob.startsWith('https://')) {
+    return urlToProb(prob);
+  }
+  return prob;
+}
+
 module.exports = {
   createBrowser,
   helpMessage,
@@ -129,4 +140,5 @@ module.exports = {
   getRequest,
   getCookie,
   mkdirIfNotExists,
+  unificationOfProb,
 };
