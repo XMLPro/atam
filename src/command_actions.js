@@ -11,25 +11,28 @@ async function login() {
   loginMod.loginByNameAndPW();
 }
 
-async function submit(prob, filename) {
-  let paramFilename = filename;
-  let paramProb = prob;
+async function submit(prob, filenameOrEmpty) {
+  let filename = filenameOrEmpty;
+  let probId = prob;
+
   if (filename === undefined) {
-    paramFilename = prob;
-    paramProb = await dirTree.getProbFromCWD();
+    filename = prob;
+    probId = await dirTree.getProbFromCWD();
   }
 
-  if (paramProb === undefined) {
+  if (probId === undefined) {
     console.log(color.error('問題が不明です'));
     process.exit(1);
   }
 
+  probId = utils.unificationOfProb(probId);
+
   const [page, browser] = await loginMod.loginByCookie();
 
-  const sourceCode = gets.getSource(paramFilename);
-  const lang = await gets.getLangId(page, paramProb);
-  const task = await gets.getProblemId(page, paramProb);
-  await submitMod.submit(page, paramProb, task, lang, sourceCode);
+  const sourceCode = gets.getSource(filename);
+  const lang = await gets.getLangId(page, probId);
+  const task = await gets.getProblemId(page, probId);
+  await submitMod.submit(page, probId, task, lang, sourceCode);
   browser.close();
 }
 
@@ -67,7 +70,7 @@ function execSampleCase(commands, input, output) {
 }
 
 async function sample(prob, commands) {
-  let probId = prob;
+  let probId = utils.unificationOfProb(prob);
   if (!await utils.probExists(probId)) {
     commands.unshift(probId);
     probId = await dirTree.getProbFromCWD();
@@ -87,7 +90,7 @@ async function sample(prob, commands) {
 }
 
 async function createDirTreeCmd(prob) {
-  dirTree.createDirTree(prob);
+  dirTree.createDirTree(utils.unificationOfProb(prob));
 }
 
 module.exports = {

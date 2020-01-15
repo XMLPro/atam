@@ -124,6 +124,17 @@ async function probExists(prob) {
   return result;
 }
 
+function urlToProb(url) {
+  return new URL(url).pathname.split('/')[2]; // '', 'contests', '<prob>', ...
+}
+
+function unificationOfProb(prob) {
+  if (prob && prob.startsWith('https://')) {
+    return urlToProb(prob);
+  }
+  return prob;
+}
+
 module.exports = {
   createBrowser,
   helpMessage,
@@ -135,4 +146,5 @@ module.exports = {
   getCookie,
   mkdirIfNotExists,
   probExists,
+  unificationOfProb,
 };
