@@ -31,14 +31,10 @@ async function getProbFromCWD() {
   const cwd = path.resolve('.').split('/');
 
   // 4階層上まで見る
-  const probs = await Promise.all(cwd.slice(cwd.lenght - 4).map(prob => utils.getRequest(prob, '', (data, response) => {
-    if (response.statusCode === 200) {
-      return prob;
-    }
-    return undefined;
-  })));
+  const probs = await Promise.all(cwd.slice(cwd.lenght - 4)
+    .map(async prob => await utils.probExists(prob) && prob));
 
-  const prob = probs.filter(value => value !== undefined)[0];
+  const prob = probs.filter(value => value !== false)[0];
   return prob;
 }
 

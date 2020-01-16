@@ -25,7 +25,7 @@ program
   });
 
 program
-  .command('test <prob> [commands...]')
+  .command('test [prob] [commands...]')
   .alias('t')
   .description('Check sample case')
   .action(actions.sample)
