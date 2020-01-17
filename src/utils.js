@@ -119,12 +119,17 @@ function mkdirIfNotExists(path) {
   }
 }
 
+async function probExists(prob) {
+  const result = await getRequest(prob, '', (data, response) => response.statusCode === 200);
+  return result;
+}
+
 function urlToProb(url) {
   return new URL(url).pathname.split('/')[2]; // '', 'contests', '<prob>', ...
 }
 
 function unificationOfProb(prob) {
-  if (prob.startsWith('https://')) {
+  if (prob && prob.startsWith('https://')) {
     return urlToProb(prob);
   }
   return prob;
@@ -140,5 +145,6 @@ module.exports = {
   getRequest,
   getCookie,
   mkdirIfNotExists,
+  probExists,
   unificationOfProb,
 };

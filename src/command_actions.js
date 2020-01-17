@@ -95,7 +95,16 @@ function execSampleCase(commands, input, output) {
 }
 
 async function sample(prob, commands) {
-  const probId = utils.unificationOfProb(prob);
+  let probId = utils.unificationOfProb(prob);
+  if (!await utils.probExists(probId)) {
+    commands.unshift(probId);
+    probId = await dirTree.getProbFromCWD();
+  }
+
+  if (probId === undefined) {
+    console.log(color.error('問題が不明です'));
+    process.exit(1);
+  }
 
   const [page, browser] = await loginMod.loginByCookie();
   const task = await gets.getProblemId(page, probId);

@@ -25,7 +25,7 @@ program
   });
 
 program
-  .command('test <prob> [commands...]')
+  .command('test [prob] [commands...]')
   .alias('t')
   .option('-f, --force', 'Not use config file')
   .description('Check sample case')
