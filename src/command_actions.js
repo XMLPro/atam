@@ -94,11 +94,24 @@ function execSampleCase(commands, input, output) {
   });
 }
 
-async function sample(prob, commands) {
+async function sample(prob, commands, options) {
+  const config = configure.get(options);
+  config.sample = config.sample || {};
+
   let probId = utils.unificationOfProb(prob);
   if (!await utils.probExists(probId)) {
-    commands.unshift(probId);
-    probId = await dirTree.getProbFromCWD();
+    if (probId) commands.unshift(probId);
+    probId = config.sample.probId || await dirTree.getProbFromCWD();
+  } else {
+    config.sample.probId = undefined;
+  }
+
+  if (commands.length === 0) {
+    if (config.sample.commands) {
+      commands.unshift(...config.sample.commands);
+    }
+  } else {
+    config.sample.commands = commands;
   }
 
   if (probId === undefined) {
@@ -107,9 +120,22 @@ async function sample(prob, commands) {
   }
 
   const [page, browser] = await loginMod.loginByCookie();
-  const task = await gets.getProblemId(page, probId);
-  const samples = await gets.getSamples(page, probId, task);
+
+  if (config.sample.probId !== probId) {
+    config.sample.samples = undefined;
+  }
+
+  let { samples } = config.sample;
+  if (!samples) {
+    const task = await gets.getProblemId(page, probId);
+    samples = await gets.getSamples(page, probId, task);
+  }
   utils.syncMap(samples, value => execSampleCase(commands, ...value));
+
+  config.sample = {
+    probId, commands, samples,
+  };
+  configure.save(config);
 
   browser.close();
 }
