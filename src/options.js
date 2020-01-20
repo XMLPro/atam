@@ -78,6 +78,18 @@ program
   });
 
 program
+  .command('list')
+  .description('Show problem list')
+  .action(actions.showProblemList)
+  .on('--help', () => {
+    utils.helpMessage({
+      example: [
+        'list',
+      ],
+    });
+  });
+
+program
   .parse(process.argv);
 
 module.exports = program;

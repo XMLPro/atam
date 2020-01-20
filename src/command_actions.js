@@ -93,9 +93,14 @@ async function createDirTreeCmd(prob) {
   dirTree.createDirTree(utils.unificationOfProb(prob));
 }
 
+async function showProblemList() {
+  console.log('list');
+}
+
 module.exports = {
   login,
   submit,
   sample,
   createDirTreeCmd,
+  showProblemList,
 };
