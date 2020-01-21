@@ -119,25 +119,29 @@ async function sample(prob, commands, options) {
     process.exit(1);
   }
 
-  const [page, browser] = await loginMod.loginByCookie();
-
   if (config.sample.probId !== probId) {
+    config.sample.task = undefined;
     config.sample.samples = undefined;
   }
 
-  let { samples } = config.sample;
-  if (!samples) {
-    const task = await gets.getProblemId(page, probId);
-    samples = await gets.getSamples(page, probId, task);
+  let page;
+  let browser;
+  if (!config.sample.task || !config.sample.samples) {
+    [page, browser] = await loginMod.loginByCookie();
+  } else {
+    browser = undefined;
   }
+
+  const task = config.sample.task || await gets.getProblemId(page, probId);
+  const samples = config.sample.samples || await gets.getSamples(page, probId, task);
   utils.syncMap(samples, value => execSampleCase(commands, ...value));
 
   config.sample = {
-    probId, commands, samples,
+    task, probId, commands, samples,
   };
   configure.save(config);
 
-  browser.close();
+  if (browser) browser.close();
 }
 
 async function createDirTreeCmd(prob) {
