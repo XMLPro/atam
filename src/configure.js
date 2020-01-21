@@ -13,8 +13,8 @@ function get(options) {
   }
 }
 
-function save(config) {
-  fs.writeFileSync(consts.confPath, JSON.stringify(config));
+function save(config, dir = '.') {
+  fs.writeFileSync(`${dir}/${consts.confPath}`, JSON.stringify(config));
 }
 
 module.exports = {
