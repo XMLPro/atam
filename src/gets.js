@@ -37,7 +37,7 @@ async function getSamples(page, prob, task) {
 
   await page.goto(url);
 
-  let samples = await page.$$('pre[id^="pre-sample"]');
+  let samples = await page.$$('.lang-ja pre[id^="pre-sample"]');
   if (samples.length === 0) {
     samples = await page.$$('pre[id^="for_copy"]');
   }
