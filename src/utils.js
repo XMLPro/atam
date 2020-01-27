@@ -55,23 +55,25 @@ async function waitFor(page, func) {
 }
 
 async function syncEach(array, f) {
+  const copiedArray = array.slice();
   const createFunc = value => () => f(value);
   let prev = Promise.resolve();
-  while (array.length !== 0) {
-    prev = prev.then(createFunc(array.shift()));
+  while (copiedArray.length !== 0) {
+    prev = prev.then(createFunc(copiedArray.shift()));
   }
   await prev;
 }
 
 async function syncMap(array, f) {
+  const copiedArray = array.slice();
   const result = [];
   const createFunc = value => (ret) => {
     result.push(ret);
     return f(value);
   };
   let prev = Promise.resolve();
-  while (array.length !== 0) {
-    prev = prev.then(createFunc(array.shift()));
+  while (copiedArray.length !== 0) {
+    prev = prev.then(createFunc(copiedArray.shift()));
   }
   return prev.then(ret => result.slice(1).concat(ret));
 }
