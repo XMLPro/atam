@@ -27,6 +27,7 @@ program
 program
   .command('test [prob] [commands...]')
   .alias('t')
+  .option('-f, --force', 'Not use config file')
   .description('Check sample case')
   .action(actions.sample)
   .on('--help', () => {
@@ -46,6 +47,7 @@ program
 program
   .command('submit [prob] [filename]')
   .alias('s')
+  .option('-f, --force', 'Not use config file')
   .description('Submit your code')
   .action(actions.submit)
   .on('--help', () => {

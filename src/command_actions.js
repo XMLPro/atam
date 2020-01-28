@@ -1,4 +1,5 @@
 const childProcess = require('child_process');
+const fs = require('fs');
 
 const loginMod = require('./login');
 const submitMod = require('./submit');
@@ -6,18 +7,31 @@ const gets = require('./gets');
 const utils = require('./utils');
 const color = require('./message_color');
 const dirTree = require('./dir_tree');
+const configure = require('./configure');
 
 async function login() {
   loginMod.loginByNameAndPW();
 }
 
-async function submit(prob, filenameOrEmpty) {
+async function submit(prob, filenameOrEmpty, options) {
   let filename = filenameOrEmpty;
   let probId = prob;
 
+  const config = configure.get(options);
+  config.submit = config.submit || {};
+
   if (filename === undefined) {
-    filename = prob;
-    probId = await dirTree.getProbFromCWD();
+    // 両方省略時 prob省略時と同じ状態にする
+    probId = probId || config.submit.filename;
+
+    // prob 省略時
+    filename = probId;
+    probId = config.submit.probId || await dirTree.getProbFromCWD();
+  }
+
+  if (!fs.existsSync(filename)) {
+    console.log(color.error(`ファイル名が不明です : ${filename}`));
+    process.exit(1);
   }
 
   if (probId === undefined) {
@@ -27,11 +41,22 @@ async function submit(prob, filenameOrEmpty) {
 
   probId = utils.unificationOfProb(probId);
 
+  if (config.submit.probId !== probId) {
+    config.submit.lang = undefined;
+    config.submit.task = undefined;
+  }
+
   const [page, browser] = await loginMod.loginByCookie();
 
   const sourceCode = gets.getSource(filename);
-  const lang = await gets.getLangId(page, probId);
-  const task = await gets.getProblemId(page, probId);
+  const lang = config.submit.lang || await gets.getLangId(page, probId);
+  const task = config.submit.task || await gets.getProblemId(page, probId);
+
+  config.submit = {
+    filename, probId, lang, task,
+  };
+  configure.save(config);
+
   await submitMod.submit(page, probId, task, lang, sourceCode);
   browser.close();
 }
@@ -69,11 +94,24 @@ function execSampleCase(commands, input, output) {
   });
 }
 
-async function sample(prob, commands) {
+async function sample(prob, commands, options) {
+  const config = configure.get(options);
+  config.sample = config.sample || {};
+
   let probId = utils.unificationOfProb(prob);
   if (!await utils.probExists(probId)) {
-    commands.unshift(probId);
-    probId = await dirTree.getProbFromCWD();
+    if (probId) commands.unshift(probId);
+    probId = config.sample.probId || await dirTree.getProbFromCWD();
+  } else {
+    config.sample.probId = undefined;
+  }
+
+  if (commands.length === 0) {
+    if (config.sample.commands) {
+      commands.unshift(...config.sample.commands);
+    }
+  } else {
+    config.sample.commands = commands;
   }
 
   if (probId === undefined) {
@@ -81,12 +119,29 @@ async function sample(prob, commands) {
     process.exit(1);
   }
 
-  const [page, browser] = await loginMod.loginByCookie();
-  const task = await gets.getProblemId(page, probId);
-  const samples = await gets.getSamples(page, probId, task);
+  if (config.sample.probId !== probId) {
+    config.sample.task = undefined;
+    config.sample.samples = undefined;
+  }
+
+  let page;
+  let browser;
+  if (!config.sample.task || !config.sample.samples) {
+    [page, browser] = await loginMod.loginByCookie();
+  } else {
+    browser = undefined;
+  }
+
+  const task = config.sample.task || await gets.getProblemId(page, probId);
+  const samples = config.sample.samples || await gets.getSamples(page, probId, task);
   utils.syncMap(samples, value => execSampleCase(commands, ...value));
 
-  browser.close();
+  config.sample = {
+    task, probId, commands, samples,
+  };
+  configure.save(config);
+
+  if (browser) browser.close();
 }
 
 async function createDirTreeCmd(prob) {

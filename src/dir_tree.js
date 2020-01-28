@@ -3,6 +3,7 @@ const path = require('path');
 const utils = require('./utils');
 const gets = require('./gets');
 const color = require('./message_color');
+const configure = require('./configure');
 
 async function createDirTree(prob) {
   const root = `./${prob}`;
@@ -22,6 +23,18 @@ async function createDirTree(prob) {
   taskIds.forEach((dirName) => {
     const dir = `${root}/${dirName}`;
     if (utils.mkdirIfNotExists(dir)) {
+      const config = {
+        submit: {
+          task: dirMap[dirName],
+          probId: prob,
+        },
+        sample: {
+          task: dirMap[dirName],
+          probId: prob,
+        },
+      };
+
+      configure.save(config, dir);
       console.log(color.success(`create ${dir}`));
     }
   });
