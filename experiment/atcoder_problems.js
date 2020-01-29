@@ -80,7 +80,7 @@ async function pageEvent(page) {
     pageEvent(await target.page());
   });
 
-  const url = 'https://kenkoooo.com/atcoder/#/table/tarepan0622';
+  const url = 'https://kenkoooo.com/atcoder/#/table/';
   await page.goto(url, { waitUntil: 'networkidle0' });
 })();
 
