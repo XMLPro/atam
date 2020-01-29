@@ -31,6 +31,7 @@ async function pageEvent(page) {
         termArea.style.bottom = '0px';
         termArea.style.right = '0px';
         termArea.style.borderRadius = '5px';
+        termArea.style.zIndex = 1000;
         termArea.className = 'resizable';
 
         const terminal = document.createElement('div');
