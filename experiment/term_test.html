@@ -1,0 +1,41 @@
+<html>
+  <head>
+    <link rel="stylesheet" href="/xterm/dist/xterm.css" />
+    <script src="/xterm/dist/xterm.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+  </head>
+  <body>
+    <p>web terminal test</p>
+    <div id="terminal" style="height: 100%; display: inline-flex; width: 50%"></div>
+    <script>
+      function fit(term, socket) {
+        // ブラウザ上のターミナルサイズと、エミュレートしているターミナルサイズを合わせる
+        const height = term.element.parentElement.offsetHeight;
+        const width = term.element.parentElement.offsetWidth - term._core.viewport.scrollBarWidth;
+
+        const cols = Math.floor(width / term._core._renderCoordinator.dimensions.actualCellWidth);
+        const rows = Math.floor(height / term._core._renderCoordinator.dimensions.actualCellHeight);
+        if (term.rows !== rows || term.cols !== cols) {
+          term._core._renderCoordinator.clear();
+          term.resize(cols, rows);
+          socket.emit('resize', { cols, rows });
+        }
+      }
+
+      const socket = io();
+      const term = new Terminal();
+      term.open(document.getElementById('terminal'));
+
+      window.onresize = () => fit(term, socket);
+      fit(term, socket);
+
+      term.onData((data) => {
+        socket.emit('data', data);
+      });
+
+      socket.on('client', data => {
+        term.write(data);
+      });
+    </script>
+  </body>
+</html>
