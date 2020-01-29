@@ -156,6 +156,15 @@ async function getResult(page, prob, sids) {
   return { information, result };
 }
 
+async function getScreenName() {
+  const name = await utils.getRequest('.', '', (data) => {
+    const $ = cheerio.load(data);
+    const elm = $('.nav .dropdown-toggle .glyphicon');
+    return $(elm)[0].next.data.trim();
+  });
+  return name;
+}
+
 module.exports = {
   getLangId,
   getProblemId,
@@ -163,4 +172,5 @@ module.exports = {
   getSource,
   getSamples,
   getResult,
+  getScreenName,
 };

@@ -45,12 +45,12 @@ const loginByNameAndPW = async () => {
   await browser.close();
 };
 
-const loginByCookie = async () => {
+const loginByCookie = async (headless = true) => {
   // cookiesの読み込み
   const cookies = utils.getCookie();
   if (cookies == null) process.exit(1);
 
-  const [page, browser] = await utils.createBrowser();
+  const [page, browser] = await utils.createBrowser(headless);
   await page.setCookie(...cookies);
 
   return [page, browser];

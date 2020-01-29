@@ -80,13 +80,13 @@ program
   });
 
 program
-  .command('list')
-  .description('Show problem list')
-  .action(actions.showProblemList)
+  .command('term')
+  .description('Open atcoder problems with terminal')
+  .action(actions.termCmd)
   .on('--help', () => {
     utils.helpMessage({
       example: [
-        'list',
+        'term',
       ],
     });
   });

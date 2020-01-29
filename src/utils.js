@@ -6,8 +6,10 @@ const fs = require('fs');
 const color = require('./message_color');
 const consts = require('./consts');
 
-async function createBrowser() {
+async function createBrowser(headless = true) {
   const browser = await puppeteer.launch({
+    headless,
+    defaultViewport: null,
     args: [
       '--no-sandbox',
       '--disable-setuid-sandbox',

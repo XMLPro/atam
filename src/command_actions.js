@@ -8,6 +8,7 @@ const utils = require('./utils');
 const color = require('./message_color');
 const dirTree = require('./dir_tree');
 const configure = require('./configure');
+const terminal = require('./terminal');
 
 async function login() {
   loginMod.loginByNameAndPW();
@@ -148,8 +149,9 @@ async function createDirTreeCmd(prob) {
   dirTree.createDirTree(utils.unificationOfProb(prob));
 }
 
-async function showProblemList() {
-  console.log('list');
+async function termCmd() {
+  terminal.startTerminalServer();
+  terminal.openAtcoderProblems();
 }
 
 module.exports = {
@@ -157,5 +159,5 @@ module.exports = {
   submit,
   sample,
   createDirTreeCmd,
-  showProblemList,
+  termCmd,
 };
